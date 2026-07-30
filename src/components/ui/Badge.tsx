@@ -17,8 +17,11 @@ export default function Badge({
   tone?: Tone;
 }) {
   return (
+    // shrink-0 + whitespace-nowrap: badges sit beside headings in flex rows, and
+    // a long product name would otherwise squeeze the badge until its own text
+    // wrapped — making "★ 4.5" two lines tall next to a single-line "★ 4.8".
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${toneClasses[tone]}`}
+      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium tabular-nums ${toneClasses[tone]}`}
     >
       {children}
     </span>
