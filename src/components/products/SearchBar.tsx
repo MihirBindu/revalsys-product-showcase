@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Input from "@/components/ui/Input";
+import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 
 export default function SearchBar() {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { updateParams } = useFilterNavigation();
   const queryFromUrl = searchParams.get("q") ?? "";
 
   const [value, setValue] = useState(queryFromUrl);
@@ -28,23 +28,20 @@ export default function SearchBar() {
     if (value === queryFromUrl) return;
 
     const handle = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set("q", value);
-      } else {
-        params.delete("q");
-      }
-      const queryString = params.toString();
-      router.push(queryString ? `${pathname}?${queryString}` : pathname, {
-        scroll: false,
+      updateParams((params) => {
+        if (value) {
+          params.set("q", value);
+        } else {
+          params.delete("q");
+        }
       });
     }, 300);
 
     return () => clearTimeout(handle);
-    // `searchParams` is a dependency on purpose: if another control (a category
-    // or brand filter) changes the URL mid-debounce, this re-reads the updated
-    // params so the pending push preserves that change instead of reverting it.
-  }, [value, queryFromUrl, searchParams, pathname, router]);
+    // Only `q` is touched here. Any filter the user changes mid-debounce is
+    // preserved because the provider composes this onto the latest requested
+    // params rather than onto a URL that may not have caught up yet.
+  }, [value, queryFromUrl, updateParams]);
 
   return (
     <Input

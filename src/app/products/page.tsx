@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import SearchBar from "@/components/products/SearchBar";
 import FilterSidebar from "@/components/products/FilterSidebar";
+import FilterPanel from "@/components/products/FilterPanel";
 import SortDropdown from "@/components/products/SortDropdown";
 import ProductGrid from "@/components/products/ProductGrid";
+import ActiveFilters from "@/components/products/ActiveFilters";
+import ResultsStatus from "@/components/products/ResultsStatus";
+import PendingOverlay from "@/components/products/PendingOverlay";
+import { FilterNavigationProvider } from "@/components/products/FilterNavigationContext";
 import { getBrands, searchProducts, type SortOption } from "@/lib/products";
 import type { Category } from "@/types/product";
 
@@ -38,27 +43,34 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">All Products</h1>
-        <p className="mt-1 text-slate-600">
-          {products.length} product{products.length === 1 ? "" : "s"} available
-        </p>
-      </header>
-
       <Suspense fallback={null}>
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
-          <div className="flex flex-col gap-6">
-            <SearchBar />
-            <FilterSidebar brands={brands} />
-          </div>
+        <FilterNavigationProvider>
+          <header className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-900">All Products</h1>
+            <ResultsStatus count={products.length} />
+          </header>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-end">
-              <SortDropdown />
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
+            <div className="flex flex-col gap-4">
+              <SearchBar />
+              <FilterPanel>
+                <FilterSidebar brands={brands} />
+              </FilterPanel>
             </div>
-            <ProductGrid products={products} />
+
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <ActiveFilters />
+                <div className="ml-auto">
+                  <SortDropdown />
+                </div>
+              </div>
+              <PendingOverlay>
+                <ProductGrid products={products} />
+              </PendingOverlay>
+            </div>
           </div>
-        </div>
+        </FilterNavigationProvider>
       </Suspense>
     </div>
   );

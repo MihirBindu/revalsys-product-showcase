@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 
 const options: { value: string; label: string }[] = [
   { value: "featured", label: "Featured" },
@@ -11,28 +12,27 @@ const options: { value: string; label: string }[] = [
 ];
 
 export default function SortDropdown() {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { updateParams } = useFilterNavigation();
   const activeSort = searchParams.get("sort") ?? "featured";
 
   function handleChange(value: string) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "featured") {
-      params.delete("sort");
-    } else {
-      params.set("sort", value);
-    }
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    updateParams((params) => {
+      if (value === "featured") {
+        params.delete("sort");
+      } else {
+        params.set("sort", value);
+      }
+    });
   }
 
   return (
-    <label className="flex items-center gap-2 text-sm text-slate-600">
+    <label className="flex shrink-0 items-center gap-2 text-sm text-slate-600">
       Sort by
       <select
         value={activeSort}
         onChange={(e) => handleChange(e.target.value)}
-        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
         aria-label="Sort products"
       >
         {options.map((opt) => (

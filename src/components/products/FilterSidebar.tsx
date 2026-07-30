@@ -1,39 +1,39 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { CATEGORIES } from "@/lib/products";
+import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 
 export default function FilterSidebar({ brands }: { brands: string[] }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { updateParams } = useFilterNavigation();
 
   const activeCategory = searchParams.get("category") ?? "All";
   const activeBrand = searchParams.get("brand") ?? "All";
   const inStockOnly = searchParams.get("inStock") === "1";
 
   function updateParam(key: string, value: string | null) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value && value !== "All") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    updateParams((params) => {
+      if (value && value !== "All") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
   }
 
   function toggleInStock() {
-    const params = new URLSearchParams(searchParams.toString());
-    if (inStockOnly) {
-      params.delete("inStock");
-    } else {
-      params.set("inStock", "1");
-    }
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    updateParams((params) => {
+      if (inStockOnly) {
+        params.delete("inStock");
+      } else {
+        params.set("inStock", "1");
+      }
+    });
   }
 
   return (
-    <aside className="flex flex-col gap-6" aria-label="Product filters">
+    <div className="flex flex-col gap-6">
       <div>
         <h2 className="mb-2 text-sm font-semibold text-slate-900">Category</h2>
         <ul className="flex flex-col gap-1">
@@ -41,8 +41,9 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
             <li key={category}>
               <button
                 type="button"
+                aria-pressed={activeCategory === category}
                 onClick={() => updateParam("category", category)}
-                className={`w-full rounded-lg px-2 py-1.5 text-left text-sm ${
+                className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
                   activeCategory === category
                     ? "bg-indigo-50 font-semibold text-indigo-700"
                     : "text-slate-600 hover:bg-slate-50"
@@ -60,7 +61,7 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
         <select
           value={activeBrand}
           onChange={(e) => updateParam("brand", e.target.value)}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
           aria-label="Filter by brand"
         >
           <option value="All">All brands</option>
@@ -81,6 +82,6 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
         />
         In stock only
       </label>
-    </aside>
+    </div>
   );
 }
