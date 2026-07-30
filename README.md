@@ -2,6 +2,9 @@
 
 A small electronics product showcase built with Next.js (App Router) and TypeScript, submitted as a technical assignment for the Angular & Next.js Developer role at Revalsys Technologies.
 
+**Live demo:** https://revalsys-product-showcase.vercel.app
+**Repository:** https://github.com/MihirBindu/revalsys-product-showcase
+
 **Theme:** Electronics (laptops, audio, wearables, smartphones, cameras, accessories).
 
 ## Project setup
