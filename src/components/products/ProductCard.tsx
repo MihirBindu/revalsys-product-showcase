@@ -8,7 +8,15 @@ import AddToCartButton from "@/components/product/AddToCartButton";
 export default function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
-      <Link href={`/products/${product.slug}`} className="block">
+      {/* A convenience click target for pointer users. Hidden from assistive
+          tech and skipped in the tab order because the title link below points
+          at the same product — otherwise every card announces twice. */}
+      <Link
+        href={`/products/${product.slug}`}
+        className="block"
+        aria-hidden="true"
+        tabIndex={-1}
+      >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
           <Image
             src={product.image}

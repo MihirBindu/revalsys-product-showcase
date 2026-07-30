@@ -28,25 +28,29 @@ interface CartState {
   keepOnly: (validProductIds: string[]) => void;
 }
 
+/** The only slice written to storage — actions are re-supplied on merge. */
+interface PersistedCart {
+  lines: CartLine[];
+}
+
 /** Shape persisted before cart lines replaced full product snapshots. */
 interface PersistedV0 {
   items?: Array<{ product?: { id?: string }; quantity?: number }>;
 }
 
-function migrateCart(persisted: unknown, version: number): CartState {
-  const state = persisted as CartState;
-
+function migrateCart(persisted: unknown, version: number): PersistedCart {
   if (version === 0) {
     const legacy = persisted as PersistedV0;
-    const lines = (legacy?.items ?? []).flatMap((entry) =>
-      entry?.product?.id
-        ? [{ productId: entry.product.id, quantity: entry.quantity ?? 1 }]
-        : []
-    );
-    return { ...state, lines };
+    return {
+      lines: (legacy?.items ?? []).flatMap((entry) =>
+        entry?.product?.id
+          ? [{ productId: entry.product.id, quantity: entry.quantity ?? 1 }]
+          : []
+      ),
+    };
   }
 
-  return state;
+  return persisted as PersistedCart;
 }
 
 export const useCartStore = create<CartState>()(
@@ -90,7 +94,7 @@ export const useCartStore = create<CartState>()(
       name: "cart-storage",
       version: 1,
       migrate: migrateCart,
-      partialize: (state) => ({ lines: state.lines }) as CartState,
+      partialize: (state): PersistedCart => ({ lines: state.lines }),
     }
   )
 );
