@@ -7,6 +7,7 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/products";
+import { absoluteUrl } from "@/lib/site";
 import Badge from "@/components/ui/Badge";
 import PriceTag from "@/components/product/PriceTag";
 import SpecTable from "@/components/product/SpecTable";
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   return {
     title: product.name,
     description: product.shortDescription,
+    alternates: { canonical: `/products/${product.slug}` },
     openGraph: {
       title: product.name,
       description: product.shortDescription,
@@ -56,9 +58,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     name: product.name,
     description: product.description,
     brand: { "@type": "Brand", name: product.brand },
-    image: product.image,
+    image: absoluteUrl(product.image),
     offers: {
       "@type": "Offer",
+      url: absoluteUrl(`/products/${product.slug}`),
       priceCurrency: "INR",
       price: product.price,
       availability: product.inStock

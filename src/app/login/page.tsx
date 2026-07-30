@@ -4,6 +4,7 @@ import LoginForm from "@/components/auth/LoginForm";
 export const metadata: Metadata = {
   title: "Login",
   description: "Sign in to NexusGadgets or continue as a guest.",
+  robots: { index: false, follow: true },
 };
 
 export default function LoginPage() {

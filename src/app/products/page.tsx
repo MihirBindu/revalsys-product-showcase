@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "All Products",
   description:
     "Search and filter laptops, audio, wearables, smartphones, cameras and accessories at NexusGadgets.",
+  alternates: { canonical: "/products" },
 };
 
 interface ProductsPageProps {

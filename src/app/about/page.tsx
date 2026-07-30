@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "Learn about NexusGadgets, a mini electronics showcase built to demonstrate Next.js and TypeScript best practices.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/products";
-
-const siteUrl = "https://nexusgadgets.example.com";
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

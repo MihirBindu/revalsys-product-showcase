@@ -31,7 +31,7 @@ npm run lint    # ESLint
 - **Cart page** — quantity controls, remove item, order summary, and a demo checkout (clears the cart and shows a confirmation; no real payment is processed).
 - **Login / guest handling** — a mock sign-in form (name + email, no password) plus an explicit "Continue as guest" path. Session state persists across reloads via `localStorage`.
 - **About Us / Contact Us pages** — static content pages; the contact form is a UI-only demo and does not send messages.
-- **SEO** — per-route metadata (static `metadata` exports and `generateMetadata` for product pages), Open Graph tags, JSON-LD `Product` structured data on product pages, `sitemap.ts`, `robots.ts`, semantic HTML landmarks (`header`/`nav`/`main`/`section`/`article`/`footer`), descriptive image `alt` text, and a single `<h1>` per page with correctly nested headings.
+- **SEO** — per-route metadata (static `metadata` exports and `generateMetadata` for product pages), canonical URLs on every indexable route, `noindex` on the cart and login pages, Open Graph tags, JSON-LD `Product` structured data with absolute URLs, `sitemap.ts`, `robots.ts`, semantic HTML landmarks (`header`/`nav`/`main`/`section`/`article`/`footer`), descriptive image `alt` text, and a single `<h1>` per page with correctly nested headings.
 
 ## Architectural decisions
 
@@ -56,4 +56,4 @@ This project was built with **Claude Code** (Anthropic), used for:
 - Login is a mock: any name/email combination "signs in" locally; there is no password, verification, or persistence beyond the browser's `localStorage`.
 - Product images are generated SVG placeholders per category rather than real photography, since no live product-image API was available.
 - The contact form does not send messages; it exists to demonstrate a validated, accessible form pattern.
-- `sitemap.ts`/`robots.ts` use a placeholder production URL (`https://nexusgadgets.example.com`) — update `siteUrl` in `src/app/layout.tsx`, `src/app/sitemap.ts`, and `src/app/robots.ts` after deploying.
+- The site origin defaults to a placeholder (`https://nexusgadgets.example.com`). Set `NEXT_PUBLIC_SITE_URL` in the deployment environment to point metadata, canonical URLs, the sitemap, and robots at the real domain — no code change required.
