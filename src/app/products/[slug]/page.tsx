@@ -59,7 +59,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     image: product.image,
     offers: {
       "@type": "Offer",
-      priceCurrency: "USD",
+      priceCurrency: "INR",
       price: product.price,
       availability: product.inStock
         ? "https://schema.org/InStock"
