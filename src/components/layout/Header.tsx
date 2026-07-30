@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCartStore, cartItemCount } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
 import { useHydrated } from "@/lib/useHydrated";
+import NavLinkStatus from "@/components/layout/NavLinkStatus";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -46,9 +47,10 @@ export default function Header() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-sm font-medium text-slate-600 hover:text-slate-900"
+                className="relative text-sm font-medium text-slate-600 hover:text-slate-900"
               >
                 {link.label}
+                <NavLinkStatus />
               </Link>
             </li>
           ))}

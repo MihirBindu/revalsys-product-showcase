@@ -8,6 +8,7 @@ import CartItemRow from "@/components/cart/CartItemRow";
 import CartSummary from "@/components/cart/CartSummary";
 import EmptyCartState from "@/components/cart/EmptyCartState";
 import OrderPlaced from "@/components/cart/OrderPlaced";
+import CartViewSkeleton from "@/components/cart/CartViewSkeleton";
 
 export default function CartView({ catalog }: { catalog: Product[] }) {
   const lines = useCartStore((s) => s.lines);
@@ -41,12 +42,7 @@ export default function CartView({ catalog }: { catalog: Product[] }) {
   // Until the persisted cart has rehydrated, render a placeholder instead of
   // the empty state, so a populated cart never flashes "empty" on load.
   if (!hydrated) {
-    return (
-      <div
-        aria-hidden
-        className="h-64 animate-pulse rounded-xl border border-slate-200 bg-slate-50"
-      />
-    );
+    return <CartViewSkeleton />;
   }
 
   if (items.length === 0) {
