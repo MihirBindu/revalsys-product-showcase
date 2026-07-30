@@ -8,9 +8,25 @@ export default function SearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [value, setValue] = useState(searchParams.get("q") ?? "");
+  const queryFromUrl = searchParams.get("q") ?? "";
+
+  const [value, setValue] = useState(queryFromUrl);
+  const [syncedQuery, setSyncedQuery] = useState(queryFromUrl);
+
+  // Adopt the URL's query whenever it changes from outside this input, so
+  // back/forward navigation and filter resets don't leave a stale search term
+  // displayed next to unfiltered results. Adjusting state during render (rather
+  // than in an effect) avoids rendering the stale value for a frame first.
+  if (queryFromUrl !== syncedQuery) {
+    setSyncedQuery(queryFromUrl);
+    setValue(queryFromUrl);
+  }
 
   useEffect(() => {
+    // Already in sync — nothing to push. This also keeps mounting the page
+    // from issuing a redundant navigation.
+    if (value === queryFromUrl) return;
+
     const handle = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
@@ -18,11 +34,17 @@ export default function SearchBar() {
       } else {
         params.delete("q");
       }
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      const queryString = params.toString();
+      router.push(queryString ? `${pathname}?${queryString}` : pathname, {
+        scroll: false,
+      });
     }, 300);
+
     return () => clearTimeout(handle);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+    // `searchParams` is a dependency on purpose: if another control (a category
+    // or brand filter) changes the URL mid-debounce, this re-reads the updated
+    // params so the pending push preserves that change instead of reverting it.
+  }, [value, queryFromUrl, searchParams, pathname, router]);
 
   return (
     <Input

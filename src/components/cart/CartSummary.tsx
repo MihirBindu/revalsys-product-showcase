@@ -1,26 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { cartTotal, useCartStore } from "@/store/cart";
 import Button from "@/components/ui/Button";
 import PriceTag from "@/components/product/PriceTag";
 
-export default function CartSummary() {
+export default function CartSummary({ onCheckout }: { onCheckout: () => void }) {
   const items = useCartStore((s) => s.items);
-  const clear = useCartStore((s) => s.clear);
-  const [placed, setPlaced] = useState(false);
   const subtotal = cartTotal(items);
-
-  if (placed) {
-    return (
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 text-center">
-        <p className="font-semibold text-emerald-800">Order placed (demo)</p>
-        <p className="mt-1 text-sm text-emerald-700">
-          This is a static demo &mdash; no real order or payment was processed.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-slate-200 p-6">
@@ -37,14 +23,7 @@ export default function CartSummary() {
         <span>Total</span>
         <PriceTag price={subtotal} />
       </div>
-      <Button
-        type="button"
-        disabled={items.length === 0}
-        onClick={() => {
-          setPlaced(true);
-          clear();
-        }}
-      >
+      <Button type="button" disabled={items.length === 0} onClick={onCheckout}>
         Checkout (Demo)
       </Button>
     </div>

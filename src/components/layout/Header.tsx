@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCartStore, cartItemCount } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
+import { useHydrated } from "@/lib/useHydrated";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -17,7 +18,18 @@ export default function Header() {
   const items = useCartStore((s) => s.items);
   const user = useAuthStore((s) => s.user);
   const isGuest = useAuthStore((s) => s.isGuest);
-  const count = cartItemCount(items);
+
+  // Persisted cart/session values are only safe to read after hydration;
+  // before that the server-rendered defaults must be used verbatim.
+  const hydrated = useHydrated();
+  const count = hydrated ? cartItemCount(items) : 0;
+  const accountLabel = !hydrated
+    ? "Login"
+    : user
+      ? `Hi, ${user.name}`
+      : isGuest
+        ? "Guest"
+        : "Login";
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -47,7 +59,7 @@ export default function Header() {
             href="/login"
             className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:block"
           >
-            {user ? `Hi, ${user.name}` : isGuest ? "Guest" : "Login"}
+            {accountLabel}
           </Link>
           <Link
             href="/cart"
@@ -76,7 +88,7 @@ export default function Header() {
 
       {menuOpen && (
         <ul className="flex flex-col gap-1 border-t border-slate-200 px-4 py-2 md:hidden">
-          {[...navLinks, { href: "/login", label: user ? `Hi, ${user.name}` : "Login" }].map(
+          {[...navLinks, { href: "/login", label: accountLabel }].map(
             (link) => (
               <li key={link.href}>
                 <Link

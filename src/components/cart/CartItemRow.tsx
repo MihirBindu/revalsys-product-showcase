@@ -14,7 +14,13 @@ export default function CartItemRow({ item }: { item: CartItem }) {
   return (
     <li className="flex gap-4 py-4">
       <Link href={`/products/${product.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100">
-        <Image src={product.image} alt={product.name} fill className="object-cover" />
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="80px"
+          className="object-cover"
+        />
       </Link>
 
       <div className="flex flex-1 flex-col gap-1">

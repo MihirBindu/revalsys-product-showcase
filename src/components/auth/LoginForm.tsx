@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { useHydrated } from "@/lib/useHydrated";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import GuestBanner from "@/components/auth/GuestBanner";
@@ -14,6 +15,7 @@ export default function LoginForm() {
   const login = useAuthStore((s) => s.login);
   const continueAsGuest = useAuthStore((s) => s.continueAsGuest);
   const logout = useAuthStore((s) => s.logout);
+  const hydrated = useHydrated();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,7 +27,9 @@ export default function LoginForm() {
     router.push("/");
   }
 
-  if (user) {
+  // Before hydration the persisted session is not readable without diverging
+  // from the server HTML, so render the signed-out form until it is.
+  if (hydrated && user) {
     return (
       <div className="flex flex-col gap-4 rounded-xl border border-slate-200 p-6">
         <p className="text-slate-700">
@@ -39,7 +43,7 @@ export default function LoginForm() {
     );
   }
 
-  if (isGuest) {
+  if (hydrated && isGuest) {
     return (
       <div className="flex flex-col gap-4 rounded-xl border border-slate-200 p-6">
         <p className="text-slate-700">You&apos;re currently browsing as a guest.</p>
