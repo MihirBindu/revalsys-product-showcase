@@ -15,14 +15,14 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const items = useCartStore((s) => s.items);
+  const lines = useCartStore((s) => s.lines);
   const user = useAuthStore((s) => s.user);
   const isGuest = useAuthStore((s) => s.isGuest);
 
   // Persisted cart/session values are only safe to read after hydration;
   // before that the server-rendered defaults must be used verbatim.
   const hydrated = useHydrated();
-  const count = hydrated ? cartItemCount(items) : 0;
+  const count = hydrated ? cartItemCount(lines) : 0;
   const accountLabel = !hydrated
     ? "Login"
     : user

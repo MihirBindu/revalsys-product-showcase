@@ -1,11 +1,16 @@
 "use client";
 
-import { cartTotal, useCartStore } from "@/store/cart";
+import { cartTotal, type CartItem } from "@/store/cart";
 import Button from "@/components/ui/Button";
 import PriceTag from "@/components/product/PriceTag";
 
-export default function CartSummary({ onCheckout }: { onCheckout: () => void }) {
-  const items = useCartStore((s) => s.items);
+export default function CartSummary({
+  items,
+  onCheckout,
+}: {
+  items: CartItem[];
+  onCheckout: () => void;
+}) {
   const subtotal = cartTotal(items);
 
   return (
