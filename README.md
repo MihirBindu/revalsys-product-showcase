@@ -56,4 +56,4 @@ This project was built with **Claude Code** (Anthropic), used for:
 - Login is a mock: any name/email combination "signs in" locally; there is no password, verification, or persistence beyond the browser's `localStorage`.
 - Product images are generated SVG placeholders per category rather than real photography, since no live product-image API was available.
 - The contact form does not send messages; it exists to demonstrate a validated, accessible form pattern.
-- The site origin defaults to a placeholder (`https://nexusgadgets.example.com`). Set `NEXT_PUBLIC_SITE_URL` in the deployment environment to point metadata, canonical URLs, the sitemap, and robots at the real domain — no code change required.
+- The site origin is resolved at build time in `src/lib/site.ts`: `NEXT_PUBLIC_SITE_URL` (explicit override, e.g. a custom domain) → `VERCEL_PROJECT_PRODUCTION_URL` (injected automatically by Vercel) → a local placeholder. A Vercel deployment therefore emits correct canonical, Open Graph, sitemap, and robots URLs with no configuration; set `NEXT_PUBLIC_SITE_URL` only when serving from a custom domain.
