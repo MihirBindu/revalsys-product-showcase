@@ -1,15 +1,22 @@
+import type { HTMLAttributes } from "react";
+
 /**
- * A shimmering placeholder block.
+ * A low-contrast shimmering placeholder block.
  *
  * `aria-hidden` because the surrounding loading view carries the single
  * `role="status"` announcement. Callers pass explicit dimensions so the
  * placeholder reserves the same space as the content it stands in for.
  */
-export default function Skeleton({ className = "" }: { className?: string }) {
+export default function Skeleton({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
+      {...props}
       aria-hidden
-      className={`rounded-md bg-slate-200 motion-safe:animate-pulse ${className}`}
+      data-skeleton="true"
+      className={`skeleton-shimmer rounded-md bg-slate-200 ${className}`}
     />
   );
 }
