@@ -84,6 +84,20 @@ test("adds a selected quantity and removes the line at zero", async ({ page }) =
   await expect(page.getByText("Your cart is empty")).toBeVisible();
 });
 
+test("shows a dismissible toast after placing an order", async ({ page }) => {
+  await page.goto("/products/aerobook-pro-14");
+  await page.getByRole("button", { name: "Add to cart" }).first().click();
+  await page.goto("/cart");
+  await page.getByRole("button", { name: "Checkout (Demo)" }).click();
+
+  const toast = page.getByRole("status");
+  await expect(toast).toContainText("Order placed successfully (demo).");
+  await expect(page.getByText("Order placed (demo)")).toBeVisible();
+
+  await toast.getByRole("button", { name: "Dismiss notification" }).click();
+  await expect(toast).toBeHidden();
+});
+
 test("validates the contact form and focuses the first error", async ({ page }) => {
   await page.goto("/contact");
   await page.getByRole("button", { name: "Send message" }).click();

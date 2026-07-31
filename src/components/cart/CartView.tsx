@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/types/product";
 import { resolveCartLines, useCartStore } from "@/store/cart";
@@ -11,6 +11,7 @@ import CartSummary from "@/components/cart/CartSummary";
 import EmptyCartState from "@/components/cart/EmptyCartState";
 import OrderPlaced from "@/components/cart/OrderPlaced";
 import CartViewSkeleton from "@/components/cart/CartViewSkeleton";
+import Toast from "@/components/ui/Toast";
 
 export default function CartView({ catalog }: { catalog: Product[] }) {
   const lines = useCartStore((s) => s.lines);
@@ -21,6 +22,8 @@ export default function CartView({ catalog }: { catalog: Product[] }) {
   // Held here rather than in CartSummary: checking out empties the cart, which
   // would unmount CartSummary and discard the flag before it could render.
   const [placed, setPlaced] = useState(false);
+  const [showOrderToast, setShowOrderToast] = useState(false);
+  const dismissOrderToast = useCallback(() => setShowOrderToast(false), []);
 
   const items = resolveCartLines(lines, catalog);
   const hasUnresolvedLines = items.length !== lines.length;
@@ -35,10 +38,21 @@ export default function CartView({ catalog }: { catalog: Product[] }) {
   function handleCheckout() {
     clear();
     setPlaced(true);
+    setShowOrderToast(true);
   }
 
   if (placed) {
-    return <OrderPlaced />;
+    return (
+      <>
+        <OrderPlaced />
+        {showOrderToast && (
+          <Toast
+            message="Order placed successfully (demo)."
+            onDismiss={dismissOrderToast}
+          />
+        )}
+      </>
+    );
   }
 
   // Until the persisted cart has rehydrated, render a placeholder instead of
