@@ -60,6 +60,45 @@ test("keeps every product-card action compact and equal-sized", async ({
   );
 });
 
+test("offers View cart and exact Undo after adding a product", async ({
+  page,
+}) => {
+  await page.goto("/products");
+  const card = page
+    .getByRole("article")
+    .filter({ hasText: "AeroBook Pro 14" });
+  const addButton = card.getByRole("button");
+
+  await addButton.click();
+  await addButton.click();
+
+  const toast = page
+    .getByRole("status")
+    .filter({ hasText: "AeroBook Pro 14 added to your cart." });
+  await expect(toast).toBeVisible();
+  await expect(
+    toast.getByRole("link", { name: "View cart" })
+  ).toHaveAttribute("href", "/cart");
+  await expect(page.getByRole("link", { name: "Cart, 2 items" })).toBeVisible();
+
+  await toast.getByRole("button", { name: "Undo" }).click();
+  await expect(page.getByRole("link", { name: "Cart, 1 item" })).toBeVisible();
+
+  await addButton.click();
+  await page
+    .getByRole("status")
+    .filter({ hasText: "AeroBook Pro 14 added to your cart." })
+    .getByRole("link", { name: "View cart" })
+    .click();
+
+  await expect(page).toHaveURL("/cart");
+  await expect(
+    page.getByRole("button", {
+      name: "Decrease quantity of AeroBook Pro 14",
+    })
+  ).toBeVisible();
+});
+
 test("adds a selected quantity and removes the line at zero", async ({ page }) => {
   await page.goto("/products/aerobook-pro-14");
   const increase = page.getByRole("button", {
