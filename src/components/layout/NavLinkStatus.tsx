@@ -5,10 +5,9 @@ import { useLinkStatus } from "next/link";
 /**
  * Spinner for the nav link currently being navigated to.
  *
- * Must be rendered inside the `<Link>` it reports on — `useLinkStatus` reads
- * the nearest link's pending state. Positioned absolutely so appearing and
- * disappearing never reflows the nav, which would be worse than no indicator
- * at all.
+ * Must render inside the `<Link>` it reports on — `useLinkStatus` reads the
+ * nearest link's pending state. Positioned absolutely so it never reflows the
+ * nav.
  */
 export default function NavLinkStatus() {
   const { pending } = useLinkStatus();

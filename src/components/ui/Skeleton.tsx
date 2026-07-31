@@ -1,10 +1,9 @@
 /**
- * A single shimmering placeholder block.
+ * A shimmering placeholder block.
  *
- * Always `aria-hidden`: the surrounding loading view carries one `role="status"`
- * announcement, so individual blocks would only add noise for screen readers.
- * Callers pass explicit dimensions so the placeholder occupies the same space as
- * the content it stands in for, which keeps the swap free of layout shift.
+ * `aria-hidden` because the surrounding loading view carries the single
+ * `role="status"` announcement. Callers pass explicit dimensions so the
+ * placeholder reserves the same space as the content it stands in for.
  */
 export default function Skeleton({ className = "" }: { className?: string }) {
   return (

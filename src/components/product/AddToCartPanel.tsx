@@ -6,12 +6,8 @@ import QuantitySelector from "@/components/ui/QuantitySelector";
 import AddToCartButton from "@/components/product/AddToCartButton";
 
 /**
- * Owns the quantity the detail page will add.
- *
- * `AddToCartButton` already accepted a `quantity` prop but nothing exposed it,
- * so the only way to buy three of something was to press the button three
- * times. The selector is hidden when the product is out of stock, where
- * choosing an amount would be meaningless.
+ * Owns the quantity the detail page will add. The selector is hidden when the
+ * product is out of stock, where choosing an amount would be meaningless.
  */
 export default function AddToCartPanel({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);

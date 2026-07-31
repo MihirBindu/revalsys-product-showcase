@@ -2,14 +2,12 @@ import Skeleton from "@/components/ui/Skeleton";
 import ProductCardSkeleton from "@/components/products/ProductCardSkeleton";
 
 /**
- * Shown while the listing route loads on a cross-page navigation.
+ * Shown while the listing route loads on a cross-page navigation. Filter
+ * changes do not land here — those run in a transition that keeps the current
+ * results on screen and dims them instead.
  *
- * In-page filter changes do *not* land here: those run inside a transition that
- * deliberately keeps the current results on screen and dims them instead, so
- * the two mechanisms complement rather than fight each other.
- *
- * The static heading is rendered for real — only the parts that depend on the
- * request are stood in for, so the header doesn't flicker on arrival.
+ * The static heading renders for real so it doesn't flicker on arrival; only
+ * request-dependent parts are stood in for.
  */
 export default function ProductsLoading() {
   return (

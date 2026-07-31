@@ -15,11 +15,9 @@ interface FilterNavigation {
   /** True while a filter-driven navigation is in flight. */
   isPending: boolean;
   /**
-   * Applies a mutation to the current filter state and navigates.
-   *
-   * Controls pass a mutator rather than a finished `URLSearchParams` so that
-   * the base is resolved here, against the freshest state — see the note on
-   * `latestParamsRef` below.
+   * Applies a change to the current filters and navigates. Callers pass a
+   * mutator rather than finished params so the base is resolved here, against
+   * the freshest state — see `latestParamsRef`.
    */
   updateParams: (mutate: (params: URLSearchParams) => void) => void;
 }
@@ -27,11 +25,9 @@ interface FilterNavigation {
 const FilterNavigationContext = createContext<FilterNavigation | null>(null);
 
 /**
- * Owns navigation for every listing control.
- *
- * The products route renders on the server, so each filter change is a network
- * round-trip. Routing all of them through a single `useTransition` lets the
- * grid show one shared pending state instead of appearing frozen.
+ * Owns navigation for every listing control. The products route renders on the
+ * server, so each filter change is a round-trip; driving them all through one
+ * `useTransition` gives the grid a single shared pending state.
  */
 export function FilterNavigationProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -40,19 +36,17 @@ export function FilterNavigationProvider({ children }: { children: ReactNode }) 
   const [isPending, startTransition] = useTransition();
 
   /**
-   * The most recent query string we asked for, which may not be on the URL yet.
+   * The most recently requested query string, which the URL may not reflect yet.
    *
-   * `startTransition` deliberately keeps the old UI interactive while the new
-   * route loads, so `useSearchParams()` still reports the *previous* query for
-   * the duration. Composing the next update from it would silently discard
-   * whatever the user just did — picking a category mid-search, for instance,
-   * would be reverted when the search debounce landed a moment later. Reading
-   * from this ref keeps rapid successive changes additive.
+   * `startTransition` keeps the old UI live while the next route loads, so
+   * `useSearchParams()` reports the previous query meanwhile. Composing from it
+   * would discard whatever the user just did — picking a category mid-search
+   * would be reverted when the debounce landed. This keeps changes additive.
    */
   const latestParamsRef = useRef<string | null>(null);
 
-  // Once the URL catches up (or the user navigates via history), the ref has
-  // served its purpose and the real URL becomes the source of truth again.
+  // Once the URL catches up (or history navigation occurs), it becomes the
+  // source of truth again.
   useEffect(() => {
     latestParamsRef.current = null;
   }, [searchParams]);

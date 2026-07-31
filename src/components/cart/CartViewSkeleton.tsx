@@ -3,10 +3,9 @@ import Skeleton from "@/components/ui/Skeleton";
 /**
  * Stands in for the cart until the persisted store has rehydrated.
  *
- * A saved cart isn't readable during the first client render, so something has
- * to fill the gap. Showing the empty state would be worse than showing nothing:
- * it briefly asserts the cart *is* empty, which for a returning customer is
- * simply wrong. This mirrors the real two-column layout instead.
+ * A saved cart isn't readable during the first client render. Showing the empty
+ * state instead would briefly assert the cart is empty, which for a returning
+ * customer is wrong, so this mirrors the real two-column layout.
  */
 export default function CartViewSkeleton() {
   return (
