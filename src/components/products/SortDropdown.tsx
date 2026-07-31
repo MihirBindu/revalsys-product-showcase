@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
+import { PRODUCT_QUERY } from "@/lib/productQuery";
 
 const options: { value: string; label: string }[] = [
   { value: "featured", label: "Featured" },
@@ -14,14 +15,14 @@ const options: { value: string; label: string }[] = [
 export default function SortDropdown() {
   const searchParams = useSearchParams();
   const { updateParams } = useFilterNavigation();
-  const activeSort = searchParams.get("sort") ?? "featured";
+  const activeSort = searchParams.get(PRODUCT_QUERY.sort) ?? "featured";
 
   function handleChange(value: string) {
     updateParams((params) => {
       if (value === "featured") {
-        params.delete("sort");
+        params.delete(PRODUCT_QUERY.sort);
       } else {
-        params.set("sort", value);
+        params.set(PRODUCT_QUERY.sort, value);
       }
     });
   }

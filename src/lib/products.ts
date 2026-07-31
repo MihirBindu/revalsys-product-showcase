@@ -1,16 +1,44 @@
 import productsData from "@/data/products.json";
-import type { Category, Product } from "@/types/product";
+import { CATEGORIES, type Category, type Product } from "@/types/product";
 
-const products = productsData as unknown as Product[];
+export { CATEGORIES };
 
-export const CATEGORIES: Category[] = [
-  "Laptops",
-  "Audio",
-  "Wearables",
-  "Smartphones",
-  "Cameras",
-  "Accessories",
-];
+/**
+ * Narrows a raw category string to the `Category` union.
+ *
+ * The catalog is JSON, so nothing stops a typo reaching the app; without this
+ * the product would simply vanish from its filter with no error anywhere.
+ * Throwing here surfaces it at build time instead.
+ */
+function toCategory(value: string, slug: string): Category {
+  const category = CATEGORIES.find((name) => name === value);
+  if (!category) {
+    throw new Error(
+      `products.json: "${slug}" has unknown category "${value}". Expected one of: ${CATEGORIES.join(", ")}.`
+    );
+  }
+  return category;
+}
+
+/**
+ * Products declare different spec keys, so TypeScript widens the array into a
+ * union whose members carry every other member's keys as `?: undefined`. That
+ * no longer fits an index signature, so the absent keys are dropped rather than
+ * asserted away with a cast.
+ */
+function toSpecs(raw: Record<string, string | undefined>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(raw).filter(
+      (entry): entry is [string, string] => entry[1] !== undefined
+    )
+  );
+}
+
+const products: Product[] = productsData.map((entry) => ({
+  ...entry,
+  category: toCategory(entry.category, entry.slug),
+  specs: toSpecs(entry.specs),
+}));
 
 export function getAllProducts(): Product[] {
   return products;

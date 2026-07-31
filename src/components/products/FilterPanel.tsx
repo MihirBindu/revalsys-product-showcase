@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useActiveFilters } from "@/components/products/useActiveFilters";
+import { PRODUCT_QUERY } from "@/lib/productQuery";
 
 /**
  * Keeps the filter controls collapsed on small screens.
@@ -13,7 +14,9 @@ import { useActiveFilters } from "@/components/products/useActiveFilters";
 export default function FilterPanel({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   // The search box lives outside this panel, so it shouldn't count here.
-  const appliedCount = useActiveFilters().filter((f) => f.key !== "q").length;
+  const appliedCount = useActiveFilters().filter(
+    (filter) => filter.key !== PRODUCT_QUERY.search
+  ).length;
 
   return (
     <div className="flex flex-col gap-3">

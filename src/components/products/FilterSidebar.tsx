@@ -3,16 +3,22 @@
 import { useSearchParams } from "next/navigation";
 import { CATEGORIES } from "@/lib/products";
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
+import { PRODUCT_QUERY, parseCategory } from "@/lib/productQuery";
 
 export default function FilterSidebar({ brands }: { brands: string[] }) {
   const searchParams = useSearchParams();
   const { updateParams } = useFilterNavigation();
 
-  const activeCategory = searchParams.get("category") ?? "All";
-  const activeBrand = searchParams.get("brand") ?? "All";
-  const inStockOnly = searchParams.get("inStock") === "1";
+  const activeCategory = parseCategory(
+    searchParams.get(PRODUCT_QUERY.category)
+  );
+  const activeBrand = searchParams.get(PRODUCT_QUERY.brand) ?? "All";
+  const inStockOnly = searchParams.get(PRODUCT_QUERY.inStock) === "1";
 
-  function updateParam(key: string, value: string | null) {
+  function updateParam(
+    key: typeof PRODUCT_QUERY.category | typeof PRODUCT_QUERY.brand,
+    value: string | null
+  ) {
     updateParams((params) => {
       if (value && value !== "All") {
         params.set(key, value);
@@ -25,9 +31,9 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
   function toggleInStock() {
     updateParams((params) => {
       if (inStockOnly) {
-        params.delete("inStock");
+        params.delete(PRODUCT_QUERY.inStock);
       } else {
-        params.set("inStock", "1");
+        params.set(PRODUCT_QUERY.inStock, "1");
       }
     });
   }
@@ -42,7 +48,7 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
               <button
                 type="button"
                 aria-pressed={activeCategory === category}
-                onClick={() => updateParam("category", category)}
+                onClick={() => updateParam(PRODUCT_QUERY.category, category)}
                 className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
                   activeCategory === category
                     ? "bg-indigo-50 font-semibold text-indigo-700"
@@ -60,7 +66,7 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
         <h2 className="mb-2 text-sm font-semibold text-slate-900">Brand</h2>
         <select
           value={activeBrand}
-          onChange={(e) => updateParam("brand", e.target.value)}
+          onChange={(e) => updateParam(PRODUCT_QUERY.brand, e.target.value)}
           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
           aria-label="Filter by brand"
         >

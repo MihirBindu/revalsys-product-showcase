@@ -9,8 +9,12 @@ import ActiveFilters from "@/components/products/ActiveFilters";
 import ResultsStatus from "@/components/products/ResultsStatus";
 import PendingOverlay from "@/components/products/PendingOverlay";
 import { FilterNavigationProvider } from "@/components/products/FilterNavigationContext";
-import { getBrands, searchProducts, type SortOption } from "@/lib/products";
-import type { Category } from "@/types/product";
+import { getBrands, searchProducts } from "@/lib/products";
+import {
+  parseCategory,
+  parseSort,
+  type ProductSearchParams,
+} from "@/lib/productQuery";
 
 export const metadata: Metadata = {
   title: "All Products",
@@ -20,13 +24,7 @@ export const metadata: Metadata = {
 };
 
 interface ProductsPageProps {
-  searchParams: Promise<{
-    q?: string;
-    category?: string;
-    brand?: string;
-    inStock?: string;
-    sort?: string;
-  }>;
+  searchParams: Promise<ProductSearchParams>;
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
@@ -35,10 +33,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   const products = searchProducts({
     query: params.q,
-    category: (params.category as Category | "All") ?? "All",
+    category: parseCategory(params.category),
     brand: params.brand ?? "All",
     inStockOnly: params.inStock === "1",
-    sort: (params.sort as SortOption) ?? "featured",
+    sort: parseSort(params.sort),
   });
 
   return (

@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Input from "@/components/ui/Input";
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
+import { PRODUCT_QUERY } from "@/lib/productQuery";
 
 export default function SearchBar() {
   const searchParams = useSearchParams();
   const { updateParams } = useFilterNavigation();
-  const queryFromUrl = searchParams.get("q") ?? "";
+  const queryFromUrl = searchParams.get(PRODUCT_QUERY.search) ?? "";
 
   const [value, setValue] = useState(queryFromUrl);
   const [syncedQuery, setSyncedQuery] = useState(queryFromUrl);
@@ -30,9 +31,9 @@ export default function SearchBar() {
     const handle = setTimeout(() => {
       updateParams((params) => {
         if (value) {
-          params.set("q", value);
+          params.set(PRODUCT_QUERY.search, value);
         } else {
-          params.delete("q");
+          params.delete(PRODUCT_QUERY.search);
         }
       });
     }, 300);

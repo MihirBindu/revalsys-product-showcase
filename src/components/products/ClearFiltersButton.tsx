@@ -1,7 +1,7 @@
 "use client";
 
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
-import { FILTER_KEYS } from "@/components/products/useActiveFilters";
+import { FILTER_QUERY_KEYS } from "@/lib/productQuery";
 
 /**
  * Clears every filter while preserving unrelated params such as `sort`.
@@ -16,7 +16,9 @@ export default function ClearFiltersButton({
   const { updateParams } = useFilterNavigation();
 
   function clearAll() {
-    updateParams((params) => FILTER_KEYS.forEach((key) => params.delete(key)));
+    updateParams((params) =>
+      FILTER_QUERY_KEYS.forEach((key) => params.delete(key))
+    );
   }
 
   return (

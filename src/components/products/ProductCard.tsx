@@ -5,7 +5,13 @@ import Badge from "@/components/ui/Badge";
 import PriceTag from "@/components/product/PriceTag";
 import AddToCartButton from "@/components/product/AddToCartButton";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  eager = false,
+  product,
+}: {
+  eager?: boolean;
+  product: Product;
+}) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
       {/* A convenience click target for pointer users. Hidden from assistive
@@ -22,6 +28,7 @@ export default function ProductCard({ product }: { product: Product }) {
             src={product.image}
             alt={product.name}
             fill
+            loading={eager ? "eager" : "lazy"}
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -42,9 +49,14 @@ export default function ProductCard({ product }: { product: Product }) {
           <Badge tone="info">★ {product.rating.toFixed(1)}</Badge>
         </div>
         <p className="text-xs text-slate-500">{product.brand}</p>
-        <p className="line-clamp-2 text-sm text-slate-600">{product.shortDescription}</p>
+        <p className="line-clamp-2 text-sm text-slate-600">
+          {product.shortDescription}
+        </p>
         <div className="mt-auto flex items-center justify-between pt-2">
-          <PriceTag price={product.price} className="text-base font-bold text-slate-900" />
+          <PriceTag
+            price={product.price}
+            className="text-base font-bold text-slate-900"
+          />
           <AddToCartButton product={product} size="sm" />
         </div>
       </div>

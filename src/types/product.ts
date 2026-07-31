@@ -1,10 +1,20 @@
-export type Category =
-  | "Laptops"
-  | "Audio"
-  | "Wearables"
-  | "Smartphones"
-  | "Cameras"
-  | "Accessories";
+/**
+ * The catalog's categories, in the order they appear in the filter sidebar.
+ *
+ * Declared as a const tuple so the `Category` union is derived from it rather
+ * than written twice — adding a category here updates the type and the filter
+ * list together, and catalog validation picks it up automatically.
+ */
+export const CATEGORIES = [
+  "Laptops",
+  "Audio",
+  "Wearables",
+  "Smartphones",
+  "Cameras",
+  "Accessories",
+] as const;
+
+export type Category = (typeof CATEGORIES)[number];
 
 export interface Product {
   id: string;

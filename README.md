@@ -12,7 +12,7 @@ A small electronics product showcase built with Next.js (App Router) and TypeScr
 | Concern | Choice | Why |
 | --- | --- | --- |
 | Framework | Next.js 16 (App Router) | Server Components, file-based routing, first-class metadata API |
-| Language | TypeScript (`strict`) | No `any` in the codebase; one documented cast for widening imported JSON |
+| Language | TypeScript (`strict`) | No `any`, unsafe assertions, or suppressed type errors |
 | Styling | Tailwind CSS v4 | Utility-first, no separate stylesheet to keep in sync with markup |
 | State | Zustand + `persist` | Cart-sized state surface; no provider tree or reducer boilerplate |
 | Data | Static JSON behind an accessor module | Swappable for a real API by changing one file |
@@ -61,6 +61,7 @@ Other scripts:
 npm run build   # production build (also runs the TypeScript check)
 npm run start   # serve the production build
 npm run lint    # ESLint
+npm run typecheck # strict TypeScript check without building
 ```
 
 ## Features implemented
@@ -77,6 +78,7 @@ npm run lint    # ESLint
 ## Architectural decisions
 
 - **App Router + Server/Client split.** Pages that only read data (home, listing, detail, about, contact) are Server Components; interactivity (search box, filters, cart buttons, login form) is isolated into small `"use client"` leaf components. This keeps most of the tree server-rendered while still shipping the interactive pieces.
+- **Static data is validated at the boundary.** `products.json` is mapped into the `Product` model once in `lib/products.ts`. Categories are narrowed against the same const tuple that drives the filter UI, so a typo fails the build instead of silently creating an unreachable product. Product specs are normalised without `any` or type assertions.
 - **State management: Zustand.** Cart and auth/session state live in two small Zustand stores (`src/store/cart.ts`, `src/store/auth.ts`) with the `persist` middleware backing them onto `localStorage`. Zustand was chosen over Context/Redux for a cart-sized state surface — no providers to wire up, no boilerplate reducers, and selectors avoid unnecessary re-renders.
 - **The cart persists references, not snapshots.** Only `productId` and `quantity` are written to `localStorage`; product details are re-joined against the catalog on read (`resolveCartLines`). A cart saved before a price or copy change therefore renders current data instead of stale data, and lines whose product has left the catalog are dropped. A versioned `migrate` upgrades carts saved in the older snapshot format. The catalog is resolved on the server in `app/cart/page.tsx` and passed down as a prop, which keeps the data-access module out of the client JS bundle; the trade-off is that the catalog is serialized into the cart page's payload (roughly 10 KB), because the server cannot know which products a client-side cart holds.
 - **Loading feedback is layered to match the kind of wait.** Cross-page navigation renders a route-level `loading.tsx` skeleton; in-page filter changes keep the current results on screen and dim them instead, since replacing results the user is already reading would be a regression; the cart shows a structured skeleton until its persisted state rehydrates; and nav links carry a `useLinkStatus` spinner. Skeleton blocks are sized against measured values (a product card is 343px, the sort control 38px) so the swap to real content produces no layout shift.
@@ -85,6 +87,7 @@ npm run lint    # ESLint
 - **Data layer shaped like an API client.** Product data is static JSON (`src/data/products.json`), but it's accessed exclusively through functions in `src/lib/products.ts` (`getAllProducts`, `getProductBySlug`, `searchProducts`, etc.) rather than importing the JSON directly in pages. Swapping this for a real API later means changing one file, not every page that touches product data.
 - **One owner for listing navigation.** Every listing control (search, category, brand, stock, sort, chips) routes through `FilterNavigationProvider`, which wraps navigation in a single `useTransition`. That gives the grid one shared pending state instead of each control tracking its own. Because `startTransition` intentionally keeps the previous UI live while the next route loads, `useSearchParams()` reports stale values mid-transition — so the provider composes each change onto the last *requested* params rather than onto the URL, keeping rapid successive changes (typing a search, then picking a category) additive instead of overwriting each other.
 - **URL as the source of truth for listing state.** Search/filter/sort on the products page are read from and written to the URL query string (via `useSearchParams`/`router.push`) instead of local-only React state. This makes filtered views linkable and shareable, and keeps the page itself an `async` Server Component that renders directly from `searchParams`.
+- **One contract owns listing query parameters.** Search, category, brand, stock, and sort keys are declared in `lib/productQuery.ts` and shared by the server page and every client control. The same module validates category and sort values, so malformed URLs fall back consistently instead of relying on unsafe casts.
 - **Local, self-authored SVG artwork — one per product.** The catalog is fictional, so there is no real photography to license. Each of the 18 products has its own hand-written SVG (`public/images/products/<slug>.svg`) rather than a shared per-category placeholder: three laptops previously rendered the identical image, which made the grid read as unfinished. Each illustration draws the actual product form (clamshell vs. earbuds vs. ring vs. foldable) in a shared design language, with colour families grouped by category so the grid looks deliberate rather than random. The whole set is 72 KB of vector, scales to any viewport, and is served through `next/image`. `next.config.ts` sets `dangerouslyAllowSVG` with a strict `contentSecurityPolicy` (`script-src 'none'; sandbox;`), which is safe here precisely because these files are authored in-repo rather than user-uploaded.
 
 ## AI tools used during development

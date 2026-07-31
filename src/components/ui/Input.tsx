@@ -1,10 +1,14 @@
 "use client";
 
-import { InputHTMLAttributes, useId } from "react";
+import type { InputHTMLAttributes } from "react";
+import {
+  FieldShell,
+  fieldControlClass,
+  useFieldIds,
+} from "@/components/ui/Field";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  /** Validation message. Presence marks the field invalid to assistive tech. */
   error?: string;
 }
 
@@ -15,35 +19,22 @@ export default function Input({
   className = "",
   ...props
 }: InputProps) {
-  // Fall back to a generated id so a caller passing `label` without `id` still
-  // gets a working label association instead of htmlFor={undefined}.
-  const generatedId = useId();
-  const inputId = id ?? generatedId;
-  const errorId = `${inputId}-error`;
+  const { fieldId, errorId } = useFieldIds(id);
 
   return (
-    <div className="flex flex-col gap-1">
-      {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-slate-700">
-          {label}
-        </label>
-      )}
+    <FieldShell
+      error={error}
+      errorId={errorId}
+      fieldId={fieldId}
+      label={label}
+    >
       <input
-        id={inputId}
+        id={fieldId}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
-        className={`w-full rounded-lg border px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-          error
-            ? "border-rose-400 focus:border-rose-500 focus:ring-rose-100"
-            : "border-slate-300 focus:border-indigo-500 focus:ring-indigo-100"
-        } ${className}`}
+        className={fieldControlClass(error, className)}
         {...props}
       />
-      {error && (
-        <p id={errorId} className="text-xs font-medium text-rose-600">
-          {error}
-        </p>
-      )}
-    </div>
+    </FieldShell>
   );
 }
