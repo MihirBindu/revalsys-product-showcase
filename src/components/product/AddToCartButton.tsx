@@ -30,6 +30,7 @@ export default function AddToCartButton({
     <Button
       type="button"
       size={size}
+      className="enabled:cursor-pointer"
       disabled={!product.inStock}
       onClick={() => {
         addItem(product.id, quantity);

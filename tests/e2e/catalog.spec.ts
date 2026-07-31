@@ -39,7 +39,9 @@ test("adds a selected quantity and removes the line at zero", async ({ page }) =
 
   await increase.click();
   await increase.click();
-  await page.getByRole("button", { name: "Add to cart" }).first().click();
+  const addToCart = page.getByRole("button", { name: "Add to cart" }).first();
+  await expect(addToCart).toHaveCSS("cursor", "pointer");
+  await addToCart.click();
   await expect(page.getByRole("link", { name: "Cart, 3 items" })).toBeVisible();
 
   await page.goto("/cart");
