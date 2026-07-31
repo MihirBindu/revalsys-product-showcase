@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCartStore, cartItemCount } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
@@ -16,6 +17,16 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  /**
+   * Home matches only exactly; every other section also owns its children, so a
+   * product page keeps "Products" marked as the current section.
+   */
+  function isCurrent(href: string) {
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  }
+
   const lines = useCartStore((s) => s.lines);
   const user = useAuthStore((s) => s.user);
   const isGuest = useAuthStore((s) => s.isGuest);
@@ -47,7 +58,12 @@ export default function Header() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="relative text-sm font-medium text-slate-600 hover:text-slate-900"
+                aria-current={isCurrent(link.href) ? "page" : undefined}
+                className={`relative text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
+                  isCurrent(link.href)
+                    ? "text-slate-900 after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-indigo-600"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
               >
                 {link.label}
                 <NavLinkStatus />
@@ -95,7 +111,12 @@ export default function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block rounded-lg px-2 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  aria-current={isCurrent(link.href) ? "page" : undefined}
+                  className={`block rounded-lg px-2 py-2 text-sm font-medium ${
+                    isCurrent(link.href)
+                      ? "bg-indigo-50 text-indigo-700"
+                      : "text-slate-700 hover:bg-slate-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}

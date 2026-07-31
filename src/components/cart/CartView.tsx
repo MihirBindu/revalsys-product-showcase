@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { Product } from "@/types/product";
 import { resolveCartLines, useCartStore } from "@/store/cart";
 import { useHydrated } from "@/lib/useHydrated";
@@ -51,11 +52,21 @@ export default function CartView({ catalog }: { catalog: Product[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
-      <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 px-4">
-        {items.map((item) => (
-          <CartItemRow key={item.product.id} item={item} />
-        ))}
-      </ul>
+      <div className="flex flex-col gap-4">
+        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 px-4">
+          {items.map((item) => (
+            <CartItemRow key={item.product.id} item={item} />
+          ))}
+        </ul>
+        {/* Previously the only routes out of the cart were emptying it or
+            checking out; there was no way back to browsing. */}
+        <Link
+          href="/products"
+          className="self-start rounded-lg text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+        >
+          &larr; Continue shopping
+        </Link>
+      </div>
       <CartSummary items={items} onCheckout={handleCheckout} />
     </div>
   );

@@ -11,7 +11,7 @@ import { absoluteUrl } from "@/lib/site";
 import Badge from "@/components/ui/Badge";
 import PriceTag from "@/components/product/PriceTag";
 import SpecTable from "@/components/product/SpecTable";
-import AddToCartButton from "@/components/product/AddToCartButton";
+import AddToCartPanel from "@/components/product/AddToCartPanel";
 import ProductCard from "@/components/products/ProductCard";
 
 interface ProductPageProps {
@@ -120,7 +120,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <p className="text-slate-600">{product.description}</p>
 
           <div>
-            <AddToCartButton product={product} size="lg" />
+            <AddToCartPanel product={product} />
           </div>
 
           <div>
