@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of an affordable smartphone with a centred notch and dual camera">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fb7185"/>
+      <stop offset="100%" stop-color="#9f1239"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Slightly wider, flatter handset than the flagship -->
+  <rect x="308" y="132" width="184" height="336" rx="26" fill="#ffffff" opacity="0.96"/>
+  <rect x="326" y="152" width="148" height="296" rx="16" fill="#9f1239" opacity="0.26"/>
+  <!-- Teardrop notch -->
+  <circle cx="400" cy="168" r="11" fill="#ffffff" opacity="0.9"/>
+  <!-- Vertical dual camera -->
+  <rect x="336" y="200" width="44" height="80" rx="20" fill="#ffffff" opacity="0.9"/>
+  <circle cx="358" cy="222" r="11" fill="#9f1239" opacity="0.6"/>
+  <circle cx="358" cy="258" r="11" fill="#9f1239" opacity="0.6"/>
+</svg>

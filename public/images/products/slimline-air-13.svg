@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of a very thin lightweight 13-inch laptop">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0b5a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Smaller lid, emphasising a compact footprint -->
+  <rect x="286" y="196" width="228" height="156" rx="10" fill="#ffffff" opacity="0.94"/>
+  <rect x="302" y="212" width="196" height="124" rx="5" fill="#0b5a8a" opacity="0.30"/>
+  <!-- Very shallow base to read as ultra-thin -->
+  <path d="M262 352h276l20 22H242z" fill="#ffffff" opacity="0.94"/>
+  <rect x="366" y="360" width="68" height="5" rx="2.5" fill="#0b5a8a" opacity="0.35"/>
+</svg>

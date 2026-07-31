@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of a lightweight wireless mouse seen from above">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Top-down body: narrow at the top, wider at the palm -->
+  <path d="M400 150c-58 0-96 44-96 112v72c0 66 42 116 96 116s96-50 96-116v-72c0-68-38-112-96-112z" fill="#ffffff" opacity="0.96"/>
+  <!-- Button split -->
+  <path d="M400 152v112" stroke="#0f766e" stroke-width="6" opacity="0.3"/>
+  <!-- Scroll wheel -->
+  <rect x="388" y="198" width="24" height="52" rx="12" fill="#0f766e" opacity="0.45"/>
+</svg>

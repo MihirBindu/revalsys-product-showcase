@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of a slim fitness tracker band with a narrow display">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#166534"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Continuous slim band -->
+  <rect x="366" y="126" width="68" height="348" rx="34" fill="#ffffff" opacity="0.72"/>
+  <!-- Narrow pill display, much smaller than a watch face -->
+  <rect x="348" y="228" width="104" height="144" rx="46" fill="#ffffff" opacity="0.96"/>
+  <rect x="368" y="252" width="64" height="96" rx="32" fill="#166534" opacity="0.34"/>
+  <!-- Step bars -->
+  <g fill="#ffffff" opacity="0.9">
+    <rect x="384" y="316" width="8" height="16" rx="4"/>
+    <rect x="396" y="304" width="8" height="28" rx="4"/>
+    <rect x="408" y="294" width="8" height="38" rx="4"/>
+  </g>
+</svg>

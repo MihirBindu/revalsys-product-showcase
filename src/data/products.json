@@ -7,7 +7,7 @@
     "brand": "Novatech",
     "price": 1299,
     "rating": 4.6,
-    "image": "/images/categories/laptops.svg",
+    "image": "/images/products/aerobook-pro-14.svg",
     "shortDescription": "A 14-inch ultraportable with a 12-hour battery and a fanless design.",
     "description": "The AeroBook Pro 14 pairs a fanless aluminum chassis with all-day battery life, making it the pick for developers and writers who work away from a desk. The 14-inch display keeps the footprint small without cramping the keyboard.",
     "specs": {
@@ -29,7 +29,7 @@
     "brand": "Ridgeline",
     "price": 1799,
     "rating": 4.4,
-    "image": "/images/categories/laptops.svg",
+    "image": "/images/products/forgebook-x15.svg",
     "shortDescription": "A 15-inch performance laptop built for creative workloads.",
     "description": "ForgeBook X15 is tuned for video editing and 3D work, with a high-refresh display and a cooling system that keeps sustained loads quiet. Ships with a full-size SD card reader for creators on the move.",
     "specs": {
@@ -51,7 +51,7 @@
     "brand": "Novatech",
     "price": 999,
     "rating": 4.2,
-    "image": "/images/categories/laptops.svg",
+    "image": "/images/products/slimline-air-13.svg",
     "shortDescription": "The lightest laptop in the lineup, built for students on a budget.",
     "description": "Slimline Air 13 trims weight and price without cutting the essentials: a crisp 13-inch panel, a comfortable keyboard, and enough battery to get through a full school day.",
     "specs": {
@@ -73,7 +73,7 @@
     "brand": "Sonicraft",
     "price": 179,
     "rating": 4.5,
-    "image": "/images/categories/audio.svg",
+    "image": "/images/products/wavepod-anc-earbuds.svg",
     "shortDescription": "True wireless earbuds with adaptive active noise cancellation.",
     "description": "WavePod earbuds combine adaptive ANC with a compact charging case that adds three extra full charges. Touch controls handle playback, calls, and noise-cancellation toggling.",
     "specs": {
@@ -94,7 +94,7 @@
     "brand": "Sonicraft",
     "price": 249,
     "rating": 4.7,
-    "image": "/images/categories/audio.svg",
+    "image": "/images/products/resonate-over-ear-studio.svg",
     "shortDescription": "Studio-tuned over-ear headphones for mixing and critical listening.",
     "description": "Resonate Studio headphones use a flat frequency response tuned for mixing engineers, paired with plush memory-foam cushions for multi-hour sessions.",
     "specs": {
@@ -115,7 +115,7 @@
     "brand": "Pulseline",
     "price": 89,
     "rating": 4.1,
-    "image": "/images/categories/audio.svg",
+    "image": "/images/products/boomcube-mini-speaker.svg",
     "shortDescription": "A pocketable Bluetooth speaker with surprisingly deep bass.",
     "description": "BoomCube fits in a jacket pocket but still fills a room, thanks to a passive bass radiator and a rugged, water-resistant shell built for outdoor use.",
     "specs": {
@@ -136,7 +136,7 @@
     "brand": "Pulseline",
     "price": 229,
     "rating": 4.3,
-    "image": "/images/categories/wearables.svg",
+    "image": "/images/products/pulse-fit-watch-2.svg",
     "shortDescription": "A fitness-first smartwatch with round-the-clock heart-rate tracking.",
     "description": "Pulse Fit Watch 2 tracks heart rate, sleep, and over 40 workout types, with a battery that lasts up to 7 days on a single charge and always-on display support.",
     "specs": {
@@ -156,8 +156,8 @@
     "category": "Wearables",
     "brand": "Ridgeline",
     "price": 79,
-    "rating": 4.0,
-    "image": "/images/categories/wearables.svg",
+    "rating": 4,
+    "image": "/images/products/ridgeline-tracker-band.svg",
     "shortDescription": "A minimalist fitness band with a two-week battery life.",
     "description": "The Tracker Band strips away the extras and focuses on step counting, sleep tracking, and notifications, stretched across a battery that lasts two full weeks.",
     "specs": {
@@ -178,7 +178,7 @@
     "brand": "Novatech",
     "price": 299,
     "rating": 4.4,
-    "image": "/images/categories/wearables.svg",
+    "image": "/images/products/aurora-smart-ring.svg",
     "shortDescription": "A titanium smart ring that tracks sleep and recovery discreetly.",
     "description": "Aurora packs sleep-stage tracking, temperature sensing, and recovery scoring into a scratch-resistant titanium band designed to be worn 24/7.",
     "specs": {
@@ -199,7 +199,7 @@
     "brand": "Novatech",
     "price": 899,
     "rating": 4.5,
-    "image": "/images/categories/smartphones.svg",
+    "image": "/images/products/novaphone-15.svg",
     "shortDescription": "A flagship phone with a triple-camera system and all-day battery.",
     "description": "NovaPhone 15 pairs a 120Hz OLED display with a triple-camera system built around a large main sensor, plus a battery tuned to comfortably last a full day of heavy use.",
     "specs": {
@@ -221,7 +221,7 @@
     "brand": "Ridgeline",
     "price": 1599,
     "rating": 4.2,
-    "image": "/images/categories/smartphones.svg",
+    "image": "/images/products/ridgeline-flex-fold.svg",
     "shortDescription": "A foldable phone that opens into a compact tablet.",
     "description": "Flex Fold unfolds into a 7.6-inch tablet display for multitasking, then folds down to pocket size, backed by a reinforced hinge rated for 200,000 folds.",
     "specs": {
@@ -243,7 +243,7 @@
     "brand": "Pulseline",
     "price": 449,
     "rating": 3.9,
-    "image": "/images/categories/smartphones.svg",
+    "image": "/images/products/pulseline-lite-5g.svg",
     "shortDescription": "An affordable 5G phone with a clean software experience.",
     "description": "Pulseline Lite 5G covers the essentials well: a bright 90Hz display, dependable battery life, and near-stock software that stays out of your way.",
     "specs": {
@@ -265,7 +265,7 @@
     "brand": "Lumaxis",
     "price": 1899,
     "rating": 4.8,
-    "image": "/images/categories/cameras.svg",
+    "image": "/images/products/lumaxis-x-mirrorless.svg",
     "shortDescription": "A full-frame mirrorless camera built for enthusiasts and hybrid shooters.",
     "description": "The Lumaxis X pairs a 33MP full-frame sensor with in-body stabilization and 6K video, aimed at photographers who also shoot serious video.",
     "specs": {
@@ -286,7 +286,7 @@
     "brand": "Lumaxis",
     "price": 599,
     "rating": 4.3,
-    "image": "/images/categories/cameras.svg",
+    "image": "/images/products/lumaxis-compact-g2.svg",
     "shortDescription": "A pocketable compact camera with a fast fixed lens.",
     "description": "Compact G2 is built for street and travel photography, with a fast f/1.8 fixed lens and a body small enough to carry everywhere.",
     "specs": {
@@ -307,7 +307,7 @@
     "brand": "Pulseline",
     "price": 349,
     "rating": 4.4,
-    "image": "/images/categories/cameras.svg",
+    "image": "/images/products/skyview-action-cam-4.svg",
     "shortDescription": "A rugged, waterproof action camera with 5.3K stabilized video.",
     "description": "SkyView Action Cam 4 shoots stabilized 5.3K footage and survives drops, dust, and water down to 10 meters without a housing.",
     "specs": {
@@ -328,7 +328,7 @@
     "brand": "Pulseline",
     "price": 59,
     "rating": 4.6,
-    "image": "/images/categories/accessories.svg",
+    "image": "/images/products/gridcharge-100w-gan.svg",
     "shortDescription": "A compact 100W GaN charger with three ports for laptops and phones.",
     "description": "GridCharge fits a laptop-capable 100W charger into a housing the size of a standard phone charger, with three ports that share power intelligently.",
     "specs": {
@@ -348,7 +348,7 @@
     "brand": "Ridgeline",
     "price": 129,
     "rating": 4.5,
-    "image": "/images/categories/accessories.svg",
+    "image": "/images/products/keyforge-mechanical-tkl.svg",
     "shortDescription": "A tenkeyless mechanical keyboard with hot-swappable switches.",
     "description": "KeyForge TKL drops the number pad to save desk space and ships with hot-swappable sockets, so switches can be changed without a soldering iron.",
     "specs": {
@@ -369,7 +369,7 @@
     "brand": "Sonicraft",
     "price": 45,
     "rating": 4.2,
-    "image": "/images/categories/accessories.svg",
+    "image": "/images/products/glidepoint-wireless-mouse.svg",
     "shortDescription": "A lightweight wireless mouse tuned for long editing sessions.",
     "description": "GlidePoint weighs in under 80 grams and pairs a low-latency 2.4GHz connection with a battery that lasts up to 70 days on a single charge.",
     "specs": {

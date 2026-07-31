@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of a flagship smartphone with a triple-camera module">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Handset -->
+  <rect x="316" y="118" width="168" height="364" rx="34" fill="#ffffff" opacity="0.96"/>
+  <rect x="334" y="140" width="132" height="320" rx="22" fill="#9a3412" opacity="0.26"/>
+  <!-- Triple-camera square, the distinguishing feature -->
+  <rect x="340" y="150" width="86" height="86" rx="22" fill="#ffffff" opacity="0.9"/>
+  <circle cx="364" cy="174" r="13" fill="#9a3412" opacity="0.6"/>
+  <circle cx="402" cy="174" r="13" fill="#9a3412" opacity="0.6"/>
+  <circle cx="364" cy="212" r="13" fill="#9a3412" opacity="0.6"/>
+  <circle cx="402" cy="212" r="8" fill="#9a3412" opacity="0.4"/>
+</svg>

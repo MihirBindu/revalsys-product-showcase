@@ -85,7 +85,7 @@ npm run lint    # ESLint
 - **Data layer shaped like an API client.** Product data is static JSON (`src/data/products.json`), but it's accessed exclusively through functions in `src/lib/products.ts` (`getAllProducts`, `getProductBySlug`, `searchProducts`, etc.) rather than importing the JSON directly in pages. Swapping this for a real API later means changing one file, not every page that touches product data.
 - **One owner for listing navigation.** Every listing control (search, category, brand, stock, sort, chips) routes through `FilterNavigationProvider`, which wraps navigation in a single `useTransition`. That gives the grid one shared pending state instead of each control tracking its own. Because `startTransition` intentionally keeps the previous UI live while the next route loads, `useSearchParams()` reports stale values mid-transition — so the provider composes each change onto the last *requested* params rather than onto the URL, keeping rapid successive changes (typing a search, then picking a category) additive instead of overwriting each other.
 - **URL as the source of truth for listing state.** Search/filter/sort on the products page are read from and written to the URL query string (via `useSearchParams`/`router.push`) instead of local-only React state. This makes filtered views linkable and shareable, and keeps the page itself an `async` Server Component that renders directly from `searchParams`.
-- **Local, self-authored SVG placeholders.** There's no live product-image API, so each category has one generated SVG placeholder (`public/images/categories/`) served through `next/image`. `next.config.ts` sets `dangerouslyAllowSVG` with a strict `contentSecurityPolicy` (`script-src 'none'; sandbox;`), which is safe here because the SVGs are authored by this project, not user-uploaded.
+- **Local, self-authored SVG artwork — one per product.** The catalog is fictional, so there is no real photography to license. Each of the 18 products has its own hand-written SVG (`public/images/products/<slug>.svg`) rather than a shared per-category placeholder: three laptops previously rendered the identical image, which made the grid read as unfinished. Each illustration draws the actual product form (clamshell vs. earbuds vs. ring vs. foldable) in a shared design language, with colour families grouped by category so the grid looks deliberate rather than random. The whole set is 72 KB of vector, scales to any viewport, and is served through `next/image`. `next.config.ts` sets `dangerouslyAllowSVG` with a strict `contentSecurityPolicy` (`script-src 'none'; sandbox;`), which is safe here precisely because these files are authored in-repo rather than user-uploaded.
 
 ## AI tools used during development
 
@@ -123,7 +123,7 @@ the Zustand persistence migration, SEO metadata wiring, and this README.
 
 - No real backend, database, or payment processing — product data is static JSON and checkout is a UI-only demo.
 - Login is a mock: any name/email combination "signs in" locally; there is no password, verification, or persistence beyond the browser's `localStorage`.
-- Product images are generated SVG placeholders per category rather than real photography, since no live product-image API was available.
+- Product images are self-authored SVG illustrations rather than photography. The products are fictional, so there is nothing real to photograph and no stock imagery is licensed into the repo.
 - The contact form validates input for real but has no delivery mechanism; a passing submission is acknowledged and discarded rather than sent.
 - Product data is a fixed 18-item catalog with no pagination. The listing renders dynamically (rather than statically) because filter state lives in the URL — a deliberate trade-off for shareable filtered views over prerendering.
 - The site origin is resolved at build time in `src/lib/site.ts`: `NEXT_PUBLIC_SITE_URL` (explicit override, e.g. a custom domain) → `VERCEL_PROJECT_PRODUCTION_URL` (injected automatically by Vercel) → a local placeholder. A Vercel deployment therefore emits correct canonical, Open Graph, sitemap, and robots URLs with no configuration; set `NEXT_PUBLIC_SITE_URL` only when serving from a custom domain.
@@ -132,8 +132,7 @@ the Zustand persistence migration, SEO metadata wiring, and this README.
 
 Given more time, in priority order:
 
-1. **Real product imagery.** Each category currently shares one self-authored SVG, so three laptops look identical — the clearest remaining gap between this and a production catalog.
-2. **Toasts with undo.** Adding from the listing only changes one button's label; removing from the cart is instant and unrecoverable. Both want a toast, and removal wants an undo.
-3. **Quantity selector on the detail page.** `AddToCartButton` already accepts a `quantity` prop; only the UI is missing.
-4. **Pagination or virtualisation.** Unnecessary at 18 products, but the listing has no answer for 500.
-5. **Automated tests.** Verification here was manual and browser-driven; the filter-race and cart-migration cases in particular deserve regression tests rather than relying on a human to re-run them.
+1. **Toasts with undo.** Adding from the listing only changes one button's label; removing from the cart is instant and unrecoverable. Both want a toast, and removal wants an undo.
+2. **Quantity selector on the detail page.** `AddToCartButton` already accepts a `quantity` prop; only the UI is missing.
+3. **Pagination or virtualisation.** Unnecessary at 18 products, but the listing has no answer for 500.
+4. **Automated tests.** Verification here was manual and browser-driven; the filter-race and cart-migration cases in particular deserve regression tests rather than relying on a human to re-run them.

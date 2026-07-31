@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Illustration of a compact GaN wall charger with three ports">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a3e635"/>
+      <stop offset="100%" stop-color="#3f6212"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Prongs on top -->
+  <g fill="#ffffff" opacity="0.85">
+    <rect x="368" y="150" width="16" height="56" rx="6"/>
+    <rect x="416" y="150" width="16" height="56" rx="6"/>
+  </g>
+  <!-- Charger brick -->
+  <rect x="292" y="204" width="216" height="216" rx="40" fill="#ffffff" opacity="0.96"/>
+  <!-- Two USB-C ovals and one rectangular USB-A -->
+  <rect x="330" y="326" width="60" height="20" rx="10" fill="#3f6212" opacity="0.55"/>
+  <rect x="410" y="326" width="60" height="20" rx="10" fill="#3f6212" opacity="0.55"/>
+  <rect x="366" y="368" width="68" height="22" rx="5" fill="#3f6212" opacity="0.4"/>
+  <!-- Power indicator -->
+  <circle cx="400" cy="268" r="14" fill="#3f6212" opacity="0.3"/>
+</svg>
