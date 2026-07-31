@@ -4,6 +4,10 @@ const formatter = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
+export function formatPrice(price: number): string {
+  return formatter.format(price);
+}
+
 export default function PriceTag({
   price,
   className = "",
@@ -11,5 +15,5 @@ export default function PriceTag({
   price: number;
   className?: string;
 }) {
-  return <span className={className}>{formatter.format(price)}</span>;
+  return <span className={className}>{formatPrice(price)}</span>;
 }

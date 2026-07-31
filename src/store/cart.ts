@@ -38,7 +38,10 @@ interface PersistedV0 {
   items?: Array<{ product?: { id?: string }; quantity?: number }>;
 }
 
-function migrateCart(persisted: unknown, version: number): PersistedCart {
+export function migrateCart(
+  persisted: unknown,
+  version: number
+): PersistedCart {
   if (version === 0) {
     const legacy = persisted as PersistedV0;
     return {
