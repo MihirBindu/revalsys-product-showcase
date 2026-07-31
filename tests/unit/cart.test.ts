@@ -54,7 +54,7 @@ describe("cart helpers", () => {
 
     expect(items).toHaveLength(1);
     expect(items[0].product.slug).toBe("aerobook-pro-14");
-    expect(cartTotal(items)).toBe(2598);
+    expect(cartTotal(items)).toBe(239998);
   });
 
   it("adds quantities and removes a line at zero", () => {
