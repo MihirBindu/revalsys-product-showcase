@@ -11,8 +11,7 @@ import PendingOverlay from "@/components/products/PendingOverlay";
 import { FilterNavigationProvider } from "@/components/products/FilterNavigationContext";
 import { getBrands, searchProducts } from "@/lib/products";
 import {
-  parseCategory,
-  parseSort,
+  parseProductFilters,
   type ProductSearchParams,
 } from "@/lib/productQuery";
 
@@ -31,13 +30,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const params = await searchParams;
   const brands = getBrands();
 
-  const products = searchProducts({
-    query: params.q,
-    category: parseCategory(params.category),
-    brand: params.brand ?? "All",
-    inStockOnly: params.inStock === "1",
-    sort: parseSort(params.sort),
-  });
+  const products = searchProducts(parseProductFilters(params));
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">

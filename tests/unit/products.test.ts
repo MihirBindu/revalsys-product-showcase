@@ -1,8 +1,43 @@
 import { describe, expect, it } from "vitest";
 import {
   getAllProducts,
+  normalizeProducts,
   searchProducts,
 } from "../../src/lib/products";
+
+const validProduct = {
+  id: "test-1",
+  slug: "test-product",
+  name: "Test Product",
+  category: "Accessories",
+  brand: "Test Brand",
+  price: 10,
+  rating: 4.5,
+  image: "/images/products/test-product.svg",
+  shortDescription: "Short description.",
+  description: "Full description.",
+  specs: { Material: "Aluminum" },
+  inStock: true,
+  featured: false,
+};
+
+describe("catalog validation", () => {
+  it("accepts a complete product", () => {
+    expect(normalizeProducts([validProduct])).toEqual([validProduct]);
+  });
+
+  it("rejects invalid values and duplicate identifiers", () => {
+    expect(() =>
+      normalizeProducts([{ ...validProduct, rating: 6 }])
+    ).toThrow(/rating/);
+    expect(() =>
+      normalizeProducts([validProduct, { ...validProduct, slug: "other-slug" }])
+    ).toThrow(/duplicate id/);
+    expect(() =>
+      normalizeProducts([{ ...validProduct, specs: {} }])
+    ).toThrow(/at least one entry/);
+  });
+});
 
 describe("searchProducts", () => {
   it("returns the full catalog for empty filters", () => {

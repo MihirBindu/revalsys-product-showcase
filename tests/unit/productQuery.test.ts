@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parseCategory, parseSort } from "../../src/lib/productQuery";
+import {
+  parseCategory,
+  parseProductFilters,
+  parseSort,
+} from "../../src/lib/productQuery";
 
 describe("product query parsing", () => {
   it("accepts known values", () => {
@@ -12,5 +16,23 @@ describe("product query parsing", () => {
     expect(parseCategory(undefined)).toBe("All");
     expect(parseSort("also-bad")).toBe("featured");
     expect(parseSort(null)).toBe("featured");
+  });
+
+  it("maps URL parameters into the complete catalog filter contract", () => {
+    expect(
+      parseProductFilters({
+        q: "camera",
+        category: "Cameras",
+        brand: "FocusLab",
+        inStock: "1",
+        sort: "rating-desc",
+      })
+    ).toEqual({
+      query: "camera",
+      category: "Cameras",
+      brand: "FocusLab",
+      inStockOnly: true,
+      sort: "rating-desc",
+    });
   });
 });

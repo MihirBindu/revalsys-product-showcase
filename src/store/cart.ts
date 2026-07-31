@@ -33,27 +33,59 @@ interface PersistedCart {
   lines: CartLine[];
 }
 
-/** Shape persisted before cart lines replaced full product snapshots. */
-interface PersistedV0 {
-  items?: Array<{ product?: { id?: string }; quantity?: number }>;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function migrateCart(
-  persisted: unknown,
-  version: number
-): PersistedCart {
-  if (version === 0) {
-    const legacy = persisted as PersistedV0;
-    return {
-      lines: (legacy?.items ?? []).flatMap((entry) =>
-        entry?.product?.id
-          ? [{ productId: entry.product.id, quantity: entry.quantity ?? 1 }]
-          : []
-      ),
-    };
+function readQuantity(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0
+    ? value
+    : 1;
+}
+
+function readCurrentLines(persisted: unknown): CartLine[] {
+  if (!isRecord(persisted) || !Array.isArray(persisted.lines)) {
+    return [];
   }
 
-  return persisted as PersistedCart;
+  return persisted.lines.flatMap((entry) => {
+    if (
+      !isRecord(entry) ||
+      typeof entry.productId !== "string" ||
+      entry.productId.trim() === ""
+    ) {
+      return [];
+    }
+    return [{
+      productId: entry.productId,
+      quantity: readQuantity(entry.quantity),
+    }];
+  });
+}
+
+function readLegacyLines(persisted: unknown): CartLine[] {
+  if (!isRecord(persisted) || !Array.isArray(persisted.items)) {
+    return [];
+  }
+
+  return persisted.items.flatMap((entry) => {
+    if (!isRecord(entry) || !isRecord(entry.product)) {
+      return [];
+    }
+    const productId = entry.product.id;
+    if (typeof productId !== "string" || productId.trim() === "") {
+      return [];
+    }
+    return [{ productId, quantity: readQuantity(entry.quantity) }];
+  });
+}
+
+export function migrateCart(persisted: unknown, version: number): PersistedCart {
+  if (version === 0) {
+    return { lines: readLegacyLines(persisted) };
+  }
+
+  return { lines: readCurrentLines(persisted) };
 }
 
 export const useCartStore = create<CartState>()(

@@ -27,6 +27,22 @@ describe("cart helpers", () => {
     ).toEqual({ lines: [{ productId: "p01", quantity: 2 }] });
   });
 
+  it("sanitizes malformed persisted cart data", () => {
+    expect(
+      migrateCart(
+        {
+          lines: [
+            { productId: "p01", quantity: -4 },
+            { productId: 12, quantity: 2 },
+            null,
+          ],
+        },
+        1
+      )
+    ).toEqual({ lines: [{ productId: "p01", quantity: 1 }] });
+    expect(migrateCart(null, 1)).toEqual({ lines: [] });
+  });
+
   it("drops missing products and resolves current catalog prices", () => {
     const items = resolveCartLines(
       [

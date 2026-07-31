@@ -1,15 +1,51 @@
 import productsData from "@/data/products.json";
+import type { ProductFilters } from "@/lib/productQuery";
 import { CATEGORIES, type Category, type Product } from "@/types/product";
 
 export { CATEGORIES };
 
-/**
- * Narrows a raw category string to the `Category` union.
- *
- * The catalog is JSON, so nothing stops a typo reaching the app; without this
- * the product would simply vanish from its filter with no error anywhere.
- * Throwing here surfaces it at build time instead.
- */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readString(
+  record: Record<string, unknown>,
+  field: string,
+  context: string
+): string {
+  const value = record[field];
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`${context}: "${field}" must be a non-empty string.`);
+  }
+  return value;
+}
+
+function readNumber(
+  record: Record<string, unknown>,
+  field: string,
+  context: string,
+  isValid: (value: number) => boolean,
+  expectation: string
+): number {
+  const value = record[field];
+  if (typeof value !== "number" || !Number.isFinite(value) || !isValid(value)) {
+    throw new Error(`${context}: "${field}" must be ${expectation}.`);
+  }
+  return value;
+}
+
+function readBoolean(
+  record: Record<string, unknown>,
+  field: string,
+  context: string
+): boolean {
+  const value = record[field];
+  if (typeof value !== "boolean") {
+    throw new Error(`${context}: "${field}" must be a boolean.`);
+  }
+  return value;
+}
+
 function toCategory(value: string, slug: string): Category {
   const category = CATEGORIES.find((name) => name === value);
   if (!category) {
@@ -20,25 +56,99 @@ function toCategory(value: string, slug: string): Category {
   return category;
 }
 
-/**
- * Products declare different spec keys, so TypeScript widens the array into a
- * union whose members carry every other member's keys as `?: undefined`. That
- * no longer fits an index signature, so the absent keys are dropped rather than
- * asserted away with a cast.
- */
-function toSpecs(raw: Record<string, string | undefined>): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(raw).filter(
-      (entry): entry is [string, string] => entry[1] !== undefined
-    )
-  );
+function toSpecs(raw: unknown, context: string): Record<string, string> {
+  if (!isRecord(raw)) {
+    throw new Error(`${context}: "specs" must be an object.`);
+  }
+
+  const specs: Record<string, string> = {};
+  for (const [name, value] of Object.entries(raw)) {
+    if (name.trim() === "" || typeof value !== "string" || value.trim() === "") {
+      throw new Error(
+        `${context}: every specification needs a non-empty name and value.`
+      );
+    }
+    specs[name] = value;
+  }
+
+  if (Object.keys(specs).length === 0) {
+    throw new Error(`${context}: "specs" must contain at least one entry.`);
+  }
+
+  return specs;
 }
 
-const products: Product[] = productsData.map((entry) => ({
-  ...entry,
-  category: toCategory(entry.category, entry.slug),
-  specs: toSpecs(entry.specs),
-}));
+function normalizeProduct(raw: unknown, index: number): Product {
+  const rowContext = `products.json row ${index + 1}`;
+  if (!isRecord(raw)) {
+    throw new Error(`${rowContext}: product must be an object.`);
+  }
+
+  const id = readString(raw, "id", rowContext);
+  const slug = readString(raw, "slug", rowContext);
+  const context = `products.json product "${slug}"`;
+  const image = readString(raw, "image", context);
+
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new Error(`${context}: "slug" must use lowercase kebab-case.`);
+  }
+  if (!image.startsWith("/images/products/")) {
+    throw new Error(
+      `${context}: "image" must reference the local /images/products/ directory.`
+    );
+  }
+
+  return {
+    id,
+    slug,
+    name: readString(raw, "name", context),
+    category: toCategory(readString(raw, "category", context), slug),
+    brand: readString(raw, "brand", context),
+    price: readNumber(raw, "price", context, (value) => value > 0, "greater than zero"),
+    rating: readNumber(
+      raw,
+      "rating",
+      context,
+      (value) => value >= 0 && value <= 5,
+      "between zero and five"
+    ),
+    image,
+    shortDescription: readString(raw, "shortDescription", context),
+    description: readString(raw, "description", context),
+    specs: toSpecs(raw.specs, context),
+    inStock: readBoolean(raw, "inStock", context),
+    featured: readBoolean(raw, "featured", context),
+  };
+}
+
+/**
+ * Validates the JSON boundary before any catalog value reaches page rendering.
+ * Invalid rows fail during the build instead of producing partial UI.
+ */
+export function normalizeProducts(raw: unknown): Product[] {
+  if (!Array.isArray(raw)) {
+    throw new Error("products.json: catalog must be an array.");
+  }
+
+  const products = raw.map(normalizeProduct);
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+
+  for (const product of products) {
+    if (ids.has(product.id)) {
+      throw new Error(`products.json: duplicate id "${product.id}".`);
+    }
+    if (slugs.has(product.slug)) {
+      throw new Error(`products.json: duplicate slug "${product.slug}".`);
+    }
+    ids.add(product.id);
+    slugs.add(product.slug);
+  }
+
+  return products;
+}
+
+const products = normalizeProducts(productsData);
 
 export function getAllProducts(): Product[] {
   return products;
@@ -64,16 +174,6 @@ export function getRelatedProducts(product: Product, limit = 4): Product[] {
   return products
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, limit);
-}
-
-export type SortOption = "featured" | "price-asc" | "price-desc" | "rating-desc" | "name-asc";
-
-export interface ProductFilters {
-  query?: string;
-  category?: Category | "All";
-  brand?: string | "All";
-  inStockOnly?: boolean;
-  sort?: SortOption;
 }
 
 export function searchProducts(filters: ProductFilters): Product[] {
