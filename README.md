@@ -7,6 +7,43 @@ A small electronics product showcase built with Next.js (App Router) and TypeScr
 
 **Theme:** Electronics (laptops, audio, wearables, smartphones, cameras, accessories).
 
+## Tech stack
+
+| Concern | Choice | Why |
+| --- | --- | --- |
+| Framework | Next.js 16 (App Router) | Server Components, file-based routing, first-class metadata API |
+| Language | TypeScript (`strict`) | No `any` in the codebase; one documented cast for widening imported JSON |
+| Styling | Tailwind CSS v4 | Utility-first, no separate stylesheet to keep in sync with markup |
+| State | Zustand + `persist` | Cart-sized state surface; no provider tree or reducer boilerplate |
+| Data | Static JSON behind an accessor module | Swappable for a real API by changing one file |
+| Hosting | Vercel | Auto-deploys from `main`; site origin derived from build env |
+
+## Project structure
+
+```
+src/
+├─ app/                      # Routes (App Router)
+│  ├─ layout.tsx             # Shared chrome + site-wide metadata
+│  ├─ page.tsx               # Home
+│  ├─ products/              # Listing (+ loading.tsx)
+│  │  └─ [slug]/             # Detail, SSG (+ loading.tsx)
+│  ├─ cart/  login/  about/  contact/
+│  ├─ error.tsx              # Route-level error boundary
+│  ├─ global-error.tsx       # Root-layout error boundary
+│  ├─ not-found.tsx
+│  ├─ sitemap.ts  robots.ts
+├─ components/
+│  ├─ ui/                    # Primitives: Button, Input, Textarea, Badge, Skeleton
+│  ├─ layout/                # Header, Footer, NavLinkStatus
+│  ├─ home/  products/  product/  cart/  auth/  contact/
+├─ lib/                      # products.ts (data layer), site.ts, useHydrated.ts
+├─ store/                    # cart.ts, auth.ts (Zustand + persist)
+├─ data/products.json        # Catalog
+└─ types/product.ts
+```
+
+Roughly 2,000 lines across ~52 files; the largest file is 145 lines.
+
 ## Project setup
 
 Requirements: Node.js 20+.
@@ -33,7 +70,8 @@ npm run lint    # ESLint
 - **Product detail page** — image, description, full specifications table, price, add-to-cart, and a "you may also like" related-products row. Statically generated per product via `generateStaticParams`.
 - **Cart page** — quantity controls, remove item, order summary, and a demo checkout (clears the cart and shows a confirmation; no real payment is processed).
 - **Login / guest handling** — a mock sign-in form (name + email, no password) plus an explicit "Continue as guest" path. Session state persists across reloads via `localStorage`.
-- **About Us / Contact Us pages** — static content pages; the contact form is a UI-only demo and does not send messages.
+- **About Us / Contact Us pages** — static content pages. The contact form performs real client-side validation (required fields, email format, minimum message length) with inline messages wired via `aria-invalid`/`aria-describedby`, moves focus to the first invalid field on a failed submit, and confirms on success; there is no backend, so the confirmation says plainly that nothing was sent.
+- **Error handling** — `error.tsx` catches route-level failures while keeping the header, nav and footer intact so the site stays navigable, `global-error.tsx` covers failures in the root layout itself, and `not-found.tsx` handles unknown routes.
 - **SEO** — per-route metadata (static `metadata` exports and `generateMetadata` for product pages), canonical URLs on every indexable route, `noindex` on the cart and login pages, Open Graph tags, JSON-LD `Product` structured data with absolute URLs, `sitemap.ts`, `robots.ts`, semantic HTML landmarks (`header`/`nav`/`main`/`section`/`article`/`footer`), descriptive image `alt` text, and a single `<h1>` per page with correctly nested headings.
 
 ## Architectural decisions
@@ -51,16 +89,51 @@ npm run lint    # ESLint
 
 ## AI tools used during development
 
-This project was built with **Claude Code** (Anthropic), used for:
-- Scaffolding the project structure and component breakdown from the assignment brief.
-- Writing component, page, and store code across the app.
-- Diagnosing a Tailwind CSS v4 cascade-layer bug (an unlayered `body` rule in the default `globals.css` from `create-next-app` was overriding Tailwind's layered utility classes on dark-mode systems) and fixing it.
-- Running `next build`/`eslint` and live browser verification (desktop + mobile viewports, full add-to-cart → cart → checkout and login → guest flows) to confirm the app works end to end, not just that it compiles.
+This project was built with **Claude Code** (Anthropic). It generated most of the
+scaffolding and component code, but the part worth describing is how it was used
+to *verify* the result — every bug below was found by driving the running app in
+a browser and measuring, not by reading the diff.
+
+**Bugs found and fixed through AI-assisted verification**
+
+| Bug | How it surfaced |
+| --- | --- |
+| Checkout confirmation was unreachable — `placed` lived in `CartSummary`, which unmounts the moment the cart is cleared, so the success panel could never render | Clicking through the real checkout flow, not just loading the page |
+| Hydration mismatch — `persist` populates the Zustand store before React hydrates, so the header disagreed with the server HTML | Diffing the server-rendered HTML (`curl`) against the live client DOM: server sent `Login`, client rendered `Hi, Mihir` |
+| Filter race — the debounced search captured a stale `searchParams`, so picking a category mid-search silently reverted it | Scripted interaction: type, then click a filter 100 ms later, then assert on the resulting URL |
+| Tailwind v4 cascade-layer bug — an unlayered `body` rule from `create-next-app` overrode Tailwind's layered utilities on dark-mode systems | Rendering the page and inspecting computed styles |
+| Skeleton placeholders were 32 px shorter than real cards, so every row jumped on load — the exact jank a skeleton exists to prevent | Injecting a temporary server delay to hold the loading state, then measuring both states and diffing the rects |
+| Rating badges rendered two lines tall next to single-line ones, because the badge had no `shrink-0` and was compressed by long titles | Measuring every badge's box and comparing dimensions |
+
+**Two lessons that shaped the process**
+
+- *Re-run old tests after refactors.* Routing filter navigation through `useTransition`
+  silently reopened the filter race that had already been fixed — `startTransition`
+  deliberately keeps the previous UI live, so `useSearchParams()` is stale mid-transition.
+  Re-running the earlier regression test caught it; testing only the new feature would not have.
+- *Verify the claim, not the code.* Several findings were false positives — an image
+  reported zero height (an artifact of a headless viewport), links appeared to have no
+  accessible name (an `alt` supplies it), and a filter's dimming looked broken (a sampling
+  artifact). Each was checked before being acted on, which avoided "fixing" non-problems.
+
+**Assisted with, but reviewed line by line:** component and store implementation,
+the Zustand persistence migration, SEO metadata wiring, and this README.
 
 ## Assumptions and limitations
 
 - No real backend, database, or payment processing — product data is static JSON and checkout is a UI-only demo.
 - Login is a mock: any name/email combination "signs in" locally; there is no password, verification, or persistence beyond the browser's `localStorage`.
 - Product images are generated SVG placeholders per category rather than real photography, since no live product-image API was available.
-- The contact form does not send messages; it exists to demonstrate a validated, accessible form pattern.
+- The contact form validates input for real but has no delivery mechanism; a passing submission is acknowledged and discarded rather than sent.
+- Product data is a fixed 18-item catalog with no pagination. The listing renders dynamically (rather than statically) because filter state lives in the URL — a deliberate trade-off for shareable filtered views over prerendering.
 - The site origin is resolved at build time in `src/lib/site.ts`: `NEXT_PUBLIC_SITE_URL` (explicit override, e.g. a custom domain) → `VERCEL_PROJECT_PRODUCTION_URL` (injected automatically by Vercel) → a local placeholder. A Vercel deployment therefore emits correct canonical, Open Graph, sitemap, and robots URLs with no configuration; set `NEXT_PUBLIC_SITE_URL` only when serving from a custom domain.
+
+## What I'd do next
+
+Given more time, in priority order:
+
+1. **Real product imagery.** Each category currently shares one self-authored SVG, so three laptops look identical — the clearest remaining gap between this and a production catalog.
+2. **Toasts with undo.** Adding from the listing only changes one button's label; removing from the cart is instant and unrecoverable. Both want a toast, and removal wants an undo.
+3. **Quantity selector on the detail page.** `AddToCartButton` already accepts a `quantity` prop; only the UI is missing.
+4. **Pagination or virtualisation.** Unnecessary at 18 products, but the listing has no answer for 500.
+5. **Automated tests.** Verification here was manual and browser-driven; the filter-race and cart-migration cases in particular deserve regression tests rather than relying on a human to re-run them.

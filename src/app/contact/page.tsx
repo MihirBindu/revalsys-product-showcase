@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ContactForm from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -32,49 +33,12 @@ export default function ContactPage() {
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-slate-900">Send a message</h2>
         <p className="mt-2 text-sm text-slate-500">
-          This form is a static UI demo and does not send messages.
+          Validation runs for real; delivery does not &mdash; this build has no
+          backend, so submissions are acknowledged rather than sent.
         </p>
-        <form className="mt-4 flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="contact-name" className="text-sm font-medium text-slate-700">
-              Name
-            </label>
-            <input
-              id="contact-name"
-              name="name"
-              type="text"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="contact-email" className="text-sm font-medium text-slate-700">
-              Email
-            </label>
-            <input
-              id="contact-email"
-              name="email"
-              type="email"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="contact-message" className="text-sm font-medium text-slate-700">
-              Message
-            </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              rows={4}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-            />
-          </div>
-          <button
-            type="button"
-            className="self-start rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
-          >
-            Send message
-          </button>
-        </form>
+        <div className="mt-4">
+          <ContactForm />
+        </div>
       </section>
     </div>
   );
