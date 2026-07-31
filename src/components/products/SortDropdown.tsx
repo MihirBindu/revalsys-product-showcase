@@ -13,7 +13,11 @@ const options: { value: string; label: string }[] = [
   { value: "name-asc", label: "Name: A to Z" },
 ];
 
-export default function SortDropdown() {
+export default function SortDropdown({
+  stacked = false,
+}: {
+  stacked?: boolean;
+}) {
   const searchParams = useSearchParams();
   const { updateParams } = useFilterNavigation();
   const activeSort = searchParams.get(PRODUCT_QUERY.sort) ?? "featured";
@@ -29,12 +33,18 @@ export default function SortDropdown() {
   }
 
   return (
-    <label className="flex shrink-0 items-center gap-2 text-sm text-slate-600">
-      Sort by
+    <label
+      className={`flex shrink-0 text-sm text-slate-600 ${
+        stacked ? "flex-col items-stretch gap-1.5" : "items-center gap-2"
+      }`}
+    >
+      <span>Sort by</span>
       <select
         value={activeSort}
         onChange={(e) => handleChange(e.target.value)}
-        className={`rounded-lg border border-slate-300 px-3 py-2 text-sm ${SELECT_FOCUS_RING}`}
+        className={`rounded-lg border border-slate-300 px-3 py-2 text-sm ${
+          stacked ? "w-full" : ""
+        } ${SELECT_FOCUS_RING}`}
         aria-label="Sort products"
       >
         {options.map((opt) => (

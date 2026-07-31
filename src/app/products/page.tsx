@@ -42,15 +42,22 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </header>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
-            <div className="flex flex-col gap-4">
+            <aside
+              aria-label="Catalog controls"
+              className="flex flex-col gap-4 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-1"
+            >
               <SearchBar />
               <FilterPanel>
                 <FilterSidebar brands={brands} />
               </FilterPanel>
-            </div>
+              <div className="hidden flex-col gap-4 border-t border-slate-200 pt-4 lg:flex">
+                <SortDropdown stacked />
+                <ActiveFilters />
+              </div>
+            </aside>
 
             <div className="flex flex-col gap-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 lg:hidden">
                 <ActiveFilters />
                 <div className="ml-auto">
                   <SortDropdown />

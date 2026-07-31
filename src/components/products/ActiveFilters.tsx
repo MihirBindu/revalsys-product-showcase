@@ -39,7 +39,7 @@ export default function ActiveFilters() {
           </li>
         ))}
       </ul>
-      {filters.length > 1 && <ClearFiltersButton className="text-xs" />}
+      <ClearFiltersButton className="text-xs" />
     </div>
   );
 }

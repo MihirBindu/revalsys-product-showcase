@@ -31,6 +31,54 @@ test("back navigation synchronizes the search input", async ({ page }) => {
   await expect(page.getByRole("article")).toHaveCount(18);
 });
 
+test("keeps catalog controls sticky only on desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/products?inStock=1");
+
+  const controls = page.getByRole("complementary", {
+    name: "Catalog controls",
+  });
+  await expect(controls).toHaveCSS("position", "sticky");
+  await expect(controls).toHaveCSS("top", "80px");
+  await expect(
+    controls.getByRole("searchbox", { name: "Search products" })
+  ).toBeVisible();
+  await expect(
+    controls.getByRole("heading", { name: "Category" })
+  ).toBeVisible();
+  await expect(
+    controls.getByRole("combobox", { name: "Sort products" })
+  ).toBeVisible();
+  await expect(
+    controls.getByRole("button", { name: "Clear all" })
+  ).toBeVisible();
+
+  await page.evaluate(() => window.scrollTo(0, 400));
+  await expect
+    .poll(async () =>
+      Math.round(
+        await controls.evaluate(
+          (element) => element.getBoundingClientRect().top
+        )
+      )
+    )
+    .toBe(80);
+
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/products?inStock=1");
+
+  await expect(controls).toHaveCSS("position", "static");
+  await expect(
+    controls.locator('select[aria-label="Sort products"]')
+  ).toBeHidden();
+  await expect(
+    page.getByRole("button", { name: /Filters/ })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("combobox", { name: "Sort products" })
+  ).toBeVisible();
+});
+
 test("keeps every product-card action compact and equal-sized", async ({
   page,
 }) => {
