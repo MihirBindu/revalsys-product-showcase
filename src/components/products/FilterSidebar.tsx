@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { CATEGORIES } from "@/lib/products";
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 import { PRODUCT_QUERY, parseCategory } from "@/lib/productQuery";
+import { SELECT_FOCUS_RING } from "@/lib/styles";
 
 export default function FilterSidebar({ brands }: { brands: string[] }) {
   const searchParams = useSearchParams();
@@ -49,7 +50,7 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
                 type="button"
                 aria-pressed={activeCategory === category}
                 onClick={() => updateParam(PRODUCT_QUERY.category, category)}
-                className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
+                className={`w-full rounded-lg px-2 py-1.5 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
                   activeCategory === category
                     ? "bg-indigo-50 font-semibold text-indigo-700"
                     : "text-slate-600 hover:bg-slate-50"
@@ -67,7 +68,7 @@ export default function FilterSidebar({ brands }: { brands: string[] }) {
         <select
           value={activeBrand}
           onChange={(e) => updateParam(PRODUCT_QUERY.brand, e.target.value)}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+          className={`w-full rounded-lg border border-slate-300 px-3 py-2 text-sm ${SELECT_FOCUS_RING}`}
           aria-label="Filter by brand"
         >
           <option value="All">All brands</option>

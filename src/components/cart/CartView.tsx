@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Product } from "@/types/product";
 import { resolveCartLines, useCartStore } from "@/store/cart";
 import { useHydrated } from "@/lib/useHydrated";
+import { INDIGO_FOCUS_RING } from "@/lib/styles";
 import CartItemRow from "@/components/cart/CartItemRow";
 import CartSummary from "@/components/cart/CartSummary";
 import EmptyCartState from "@/components/cart/EmptyCartState";
@@ -62,7 +63,7 @@ export default function CartView({ catalog }: { catalog: Product[] }) {
             checking out; there was no way back to browsing. */}
         <Link
           href="/products"
-          className="self-start rounded-lg text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+          className={`self-start rounded-lg text-sm font-medium text-indigo-600 hover:text-indigo-700 motion-safe:transition-colors ${INDIGO_FOCUS_RING}`}
         >
           &larr; Continue shopping
         </Link>

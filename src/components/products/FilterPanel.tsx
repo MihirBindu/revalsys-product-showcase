@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { useActiveFilters } from "@/components/products/useActiveFilters";
 import { PRODUCT_QUERY } from "@/lib/productQuery";
+import { INDIGO_FOCUS_RING } from "@/lib/styles";
 
 /**
  * Keeps the filter controls collapsed on small screens.
@@ -25,7 +26,7 @@ export default function FilterPanel({ children }: { children: ReactNode }) {
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         aria-controls="filter-panel"
-        className="flex items-center justify-between rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 lg:hidden"
+        className={`flex items-center justify-between rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 motion-safe:transition-colors lg:hidden ${INDIGO_FOCUS_RING}`}
       >
         <span>
           Filters
@@ -35,7 +36,7 @@ export default function FilterPanel({ children }: { children: ReactNode }) {
             </span>
           )}
         </span>
-        <span aria-hidden className="text-slate-400">
+        <span aria-hidden className="select-none text-slate-400">
           {open ? "▲" : "▼"}
         </span>
       </button>

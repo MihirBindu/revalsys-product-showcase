@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import "./globals.css";
+import { INDIGO_FOCUS_RING } from "@/lib/styles";
 
 /**
  * Last-resort boundary for failures in the root layout itself.
@@ -35,7 +36,7 @@ export default function GlobalError({
           <button
             type="button"
             onClick={reset}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            className={`rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 motion-safe:transition-colors ${INDIGO_FOCUS_RING}`}
           >
             Try again
           </button>

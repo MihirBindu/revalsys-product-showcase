@@ -15,7 +15,7 @@ interface QuantitySelectorProps {
 }
 
 const controlClasses =
-  "px-2.5 py-1 text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500";
+  "px-2.5 py-1 text-slate-600 hover:bg-slate-50 motion-safe:transition-colors disabled:cursor-not-allowed disabled:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500";
 
 export default function QuantitySelector({
   value,
@@ -35,7 +35,9 @@ export default function QuantitySelector({
         className={controlClasses}
         onClick={() => onChange(value - 1)}
       >
-        −
+        <span aria-hidden className="select-none">
+          −
+        </span>
       </button>
       {/* aria-live so the new value is announced after a button press, which
           would otherwise be a silent change for screen-reader users. */}
@@ -49,7 +51,9 @@ export default function QuantitySelector({
         className={controlClasses}
         onClick={() => onChange(value + 1)}
       >
-        +
+        <span aria-hidden className="select-none">
+          +
+        </span>
       </button>
     </div>
   );

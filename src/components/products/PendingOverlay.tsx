@@ -14,7 +14,7 @@ export default function PendingOverlay({ children }: { children: ReactNode }) {
   return (
     <div
       aria-busy={isPending}
-      className={`transition-opacity duration-200 ${
+      className={`motion-safe:transition-opacity motion-safe:duration-200 ${
         isPending ? "pointer-events-none opacity-50" : "opacity-100"
       }`}
     >

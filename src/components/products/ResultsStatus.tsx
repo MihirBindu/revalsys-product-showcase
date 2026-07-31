@@ -22,7 +22,7 @@ export default function ResultsStatus({ count }: { count: number }) {
       {isPending && (
         <span
           aria-hidden
-          className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600"
+          className="h-3.5 w-3.5 rounded-full border-2 border-slate-300 border-t-indigo-600 motion-safe:animate-spin"
         />
       )}
       <span className="sr-only">{isPending ? "Updating results" : ""}</span>

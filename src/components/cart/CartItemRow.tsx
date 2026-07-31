@@ -44,7 +44,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
           />
           <button
             type="button"
-            className="rounded text-xs font-medium text-rose-600 transition-colors hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
+            className="rounded text-xs font-medium text-rose-600 hover:text-rose-700 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
             onClick={() => removeItem(product.id)}
           >
             Remove

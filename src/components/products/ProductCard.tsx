@@ -13,7 +13,7 @@ export default function ProductCard({
   product: Product;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white hover:shadow-md motion-safe:transition-shadow">
       {/* A convenience click target for pointer users. Hidden from assistive
           tech and skipped in the tab order because the title link below points
           at the same product — otherwise every card announces twice. */}
@@ -30,7 +30,7 @@ export default function ProductCard({
             fill
             loading={eager ? "eager" : "lazy"}
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
           />
           {!product.inStock && (
             <span className="absolute left-2 top-2">

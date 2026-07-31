@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 import { PRODUCT_QUERY } from "@/lib/productQuery";
+import { SELECT_FOCUS_RING } from "@/lib/styles";
 
 const options: { value: string; label: string }[] = [
   { value: "featured", label: "Featured" },
@@ -33,7 +34,7 @@ export default function SortDropdown() {
       <select
         value={activeSort}
         onChange={(e) => handleChange(e.target.value)}
-        className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+        className={`rounded-lg border border-slate-300 px-3 py-2 text-sm ${SELECT_FOCUS_RING}`}
         aria-label="Sort products"
       >
         {options.map((opt) => (

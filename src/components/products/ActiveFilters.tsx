@@ -29,10 +29,10 @@ export default function ActiveFilters() {
               type="button"
               onClick={() => removeFilter(filter.key)}
               aria-label={`Remove filter ${filter.label}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 py-1 pl-3 pr-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1"
+              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 py-1 pl-3 pr-2 text-xs font-medium text-slate-700 hover:bg-slate-200 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1"
             >
               {filter.label}
-              <span aria-hidden className="text-slate-500">
+              <span aria-hidden className="select-none text-slate-500">
                 ×
               </span>
             </button>

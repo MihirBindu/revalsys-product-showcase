@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useCartStore, cartItemCount } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
 import { useHydrated } from "@/lib/useHydrated";
+import { INDIGO_FOCUS_RING } from "@/lib/styles";
 import NavLinkStatus from "@/components/layout/NavLinkStatus";
 
 const navLinks = [
@@ -59,7 +60,7 @@ export default function Header() {
               <Link
                 href={link.href}
                 aria-current={isCurrent(link.href) ? "page" : undefined}
-                className={`relative text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
+                className={`relative text-sm font-medium motion-safe:transition-colors ${INDIGO_FOCUS_RING} ${
                   isCurrent(link.href)
                     ? "text-slate-900 after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-indigo-600"
                     : "text-slate-600 hover:text-slate-900"
@@ -75,14 +76,14 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:block"
+            className={`hidden rounded text-sm font-medium text-slate-600 hover:text-slate-900 motion-safe:transition-colors sm:block ${INDIGO_FOCUS_RING}`}
           >
             {accountLabel}
           </Link>
           <Link
             href="/cart"
             aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
-            className="relative inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className={`relative inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 motion-safe:transition-colors ${INDIGO_FOCUS_RING}`}
           >
             Cart
             {count > 0 && (
@@ -93,13 +94,15 @@ export default function Header() {
           </Link>
           <button
             type="button"
-            className="inline-flex items-center rounded-lg border border-slate-300 px-2 py-1.5 md:hidden"
+            className={`inline-flex items-center rounded-lg border border-slate-300 px-2 py-1.5 md:hidden ${INDIGO_FOCUS_RING}`}
             aria-expanded={menuOpen}
             aria-label="Toggle navigation menu"
             onClick={() => setMenuOpen((open) => !open)}
           >
             <span className="sr-only">Menu</span>
-            ☰
+            <span aria-hidden className="select-none">
+              ☰
+            </span>
           </button>
         </div>
       </nav>
@@ -112,7 +115,7 @@ export default function Header() {
                 <Link
                   href={link.href}
                   aria-current={isCurrent(link.href) ? "page" : undefined}
-                  className={`block rounded-lg px-2 py-2 text-sm font-medium ${
+                  className={`block rounded-lg px-2 py-2 text-sm font-medium motion-safe:transition-colors ${INDIGO_FOCUS_RING} ${
                     isCurrent(link.href)
                       ? "bg-indigo-50 text-indigo-700"
                       : "text-slate-700 hover:bg-slate-50"

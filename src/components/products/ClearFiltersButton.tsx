@@ -2,6 +2,7 @@
 
 import { useFilterNavigation } from "@/components/products/FilterNavigationContext";
 import { FILTER_QUERY_KEYS } from "@/lib/productQuery";
+import { INDIGO_FOCUS_RING } from "@/lib/styles";
 
 /**
  * Clears every filter while preserving unrelated params such as `sort`.
@@ -25,7 +26,7 @@ export default function ClearFiltersButton({
     <button
       type="button"
       onClick={clearAll}
-      className={`rounded-lg text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${className}`}
+      className={`rounded-lg text-sm font-medium text-indigo-600 hover:text-indigo-700 motion-safe:transition-colors ${INDIGO_FOCUS_RING} ${className}`}
     >
       {children}
     </button>
