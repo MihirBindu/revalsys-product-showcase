@@ -52,12 +52,14 @@ export default function ProductCard({
         <p className="line-clamp-2 text-sm text-slate-600">
           {product.shortDescription}
         </p>
-        <div className="mt-auto flex items-center justify-between pt-2">
+        <div className="mt-auto flex flex-wrap items-center justify-between pt-2">
           <PriceTag
             price={product.price}
-            className="text-base font-bold text-slate-900"
+            className="shrink-0 text-base font-bold text-slate-900"
           />
-          <AddToCartButton product={product} size="sm" />
+          <div className="ml-auto">
+            <AddToCartButton product={product} size="sm" />
+          </div>
         </div>
       </div>
     </article>

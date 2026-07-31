@@ -31,6 +31,35 @@ test("back navigation synchronizes the search input", async ({ page }) => {
   await expect(page.getByRole("article")).toHaveCount(18);
 });
 
+test("keeps every product-card action compact and equal-sized", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 660, height: 800 });
+  await page.goto("/products");
+
+  const buttons = page
+    .getByRole("article")
+    .getByRole("button", { name: /Add to cart|Out of stock/ });
+  await expect(buttons).toHaveCount(18);
+
+  const measurements = await buttons.evaluateAll((elements) =>
+    elements.map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        height: Math.round(rect.height),
+        whiteSpace: getComputedStyle(element).whiteSpace,
+        width: Math.round(rect.width),
+      };
+    })
+  );
+
+  expect([...new Set(measurements.map(({ width }) => width))]).toEqual([80]);
+  expect([...new Set(measurements.map(({ height }) => height))]).toEqual([32]);
+  expect([...new Set(measurements.map(({ whiteSpace }) => whiteSpace))]).toEqual(
+    ["nowrap"]
+  );
+});
+
 test("adds a selected quantity and removes the line at zero", async ({ page }) => {
   await page.goto("/products/aerobook-pro-14");
   const increase = page.getByRole("button", {
