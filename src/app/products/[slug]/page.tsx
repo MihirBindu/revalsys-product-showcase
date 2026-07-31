@@ -13,6 +13,7 @@ import PriceTag from "@/components/product/PriceTag";
 import SpecTable from "@/components/product/SpecTable";
 import AddToCartPanel from "@/components/product/AddToCartPanel";
 import ProductCard from "@/components/products/ProductCard";
+import ProductQuickViewProvider from "@/components/products/ProductQuickViewProvider";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -133,11 +134,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       {related.length > 0 && (
         <section className="mt-16">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">You may also like</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {related.map((item) => (
-              <ProductCard key={item.id} product={item} />
-            ))}
-          </div>
+          <ProductQuickViewProvider>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {related.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
+            </div>
+          </ProductQuickViewProvider>
         </section>
       )}
     </div>

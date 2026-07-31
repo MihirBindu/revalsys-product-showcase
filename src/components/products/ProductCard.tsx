@@ -4,7 +4,7 @@ import type { Product } from "@/types/product";
 import Badge from "@/components/ui/Badge";
 import PriceTag from "@/components/product/PriceTag";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import ProductQuickView from "@/components/products/ProductQuickView";
+import ProductQuickViewTrigger from "@/components/products/ProductQuickViewTrigger";
 
 export default function ProductCard({
   eager = false,
@@ -41,7 +41,7 @@ export default function ProductCard({
             )}
           </div>
         </Link>
-        <ProductQuickView product={product} />
+        <ProductQuickViewTrigger product={product} />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">

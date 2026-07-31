@@ -35,9 +35,11 @@ test("desktop product quick view meets the automated WCAG baseline", async ({
 }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/products");
-  await page
-    .getByRole("button", { name: "Quick view AeroBook Pro 14" })
-    .click();
+  const quickView = page.getByRole("button", {
+    name: "Quick view AeroBook Pro 14",
+  });
+  await quickView.focus();
+  await quickView.press("Enter");
   await expect(
     page.getByRole("dialog", { name: "AeroBook Pro 14" })
   ).toBeVisible();
@@ -108,7 +110,11 @@ test("reduced-motion users receive static product-card effects", async ({
 
   const card = page.getByRole("article").first();
   const image = card.locator("img");
+  const quickView = card.getByRole("button", {
+    name: "Quick view AeroBook Pro 14",
+  });
 
   await expect(card).toHaveCSS("transition-duration", "0s");
   await expect(image).toHaveCSS("transition-duration", "0s");
+  await expect(quickView).toHaveCSS("transition-duration", "0s");
 });

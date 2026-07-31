@@ -1,6 +1,7 @@
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/products/ProductCard";
 import ClearFiltersButton from "@/components/products/ClearFiltersButton";
+import ProductQuickViewProvider from "@/components/products/ProductQuickViewProvider";
 
 export default function ProductGrid({ products }: { products: Product[] }) {
   if (products.length === 0) {
@@ -18,14 +19,16 @@ export default function ProductGrid({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-      {products.map((product, index) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          eager={index === 0}
-        />
-      ))}
-    </div>
+    <ProductQuickViewProvider>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+        {products.map((product, index) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            eager={index === 0}
+          />
+        ))}
+      </div>
+    </ProductQuickViewProvider>
   );
 }

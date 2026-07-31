@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/products/ProductCard";
+import ProductQuickViewProvider from "@/components/products/ProductQuickViewProvider";
 
 export default function FeaturedGrid({ products }: { products: Product[] }) {
   return (
@@ -14,11 +15,13 @@ export default function FeaturedGrid({ products }: { products: Product[] }) {
           View all &rarr;
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductQuickViewProvider>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </ProductQuickViewProvider>
     </section>
   );
 }
