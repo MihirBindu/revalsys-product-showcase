@@ -6,15 +6,19 @@ import type { Product } from "@/types/product";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/ui/ToastProvider";
 
-export default function AddToCartButton({
-  product,
-  quantity = 1,
-  size = "md",
-}: {
+interface AddToCartButtonProps {
+  onAdded?: () => void;
   product: Product;
   quantity?: number;
   size?: "sm" | "md" | "lg";
-}) {
+}
+
+export default function AddToCartButton({
+  onAdded,
+  product,
+  quantity = 1,
+  size = "md",
+}: AddToCartButtonProps) {
   const addItem = useCartStore((s) => s.addItem);
   const { showToast } = useToast();
   const [justAdded, setJustAdded] = useState(false);
@@ -32,6 +36,7 @@ export default function AddToCartButton({
     <Button
       type="button"
       size={size}
+      data-add-to-cart-button
       className="enabled:cursor-pointer"
       disabled={!product.inStock}
       onClick={() => {
@@ -62,6 +67,7 @@ export default function AddToCartButton({
         setJustAdded(true);
         if (resetTimer.current) clearTimeout(resetTimer.current);
         resetTimer.current = setTimeout(() => setJustAdded(false), 1500);
+        onAdded?.();
       }}
     >
       {!product.inStock ? "Out of stock" : justAdded ? "Added ✓" : "Add to cart"}

@@ -79,6 +79,86 @@ test("keeps catalog controls sticky only on desktop", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("offers an accessible desktop quick view without changing mobile cards", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/products");
+
+  const card = page
+    .getByRole("article")
+    .filter({ hasText: "AeroBook Pro 14" });
+  const quickView = card.getByRole("button", {
+    name: "Quick view AeroBook Pro 14",
+  });
+
+  await expect(quickView).toHaveCSS("opacity", "0");
+  await card.hover();
+  await expect(quickView).toHaveCSS("opacity", "1");
+  await page.mouse.move(0, 0);
+  await quickView.focus();
+  await expect(quickView).toHaveCSS("opacity", "1");
+  await quickView.press("Enter");
+
+  const dialog = page.getByRole("dialog", { name: "AeroBook Pro 14" });
+  const closeButton = dialog.getByRole("button", {
+    name: "Close quick view for AeroBook Pro 14",
+  });
+  const detailsLink = dialog.getByRole("link", {
+    name: "View full details",
+  });
+
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByRole("img", { name: "AeroBook Pro 14" })
+  ).toBeVisible();
+  await expect(dialog.getByText("₹1,19,999", { exact: true })).toBeVisible();
+  await expect(dialog.getByText("In stock", { exact: true })).toBeVisible();
+  await expect(dialog.locator("dl > div")).toHaveCount(3);
+  await expect(detailsLink).toHaveAttribute(
+    "href",
+    "/products/aerobook-pro-14"
+  );
+  await expect(closeButton).toBeFocused();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(detailsLink).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(closeButton).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(quickView).toBeFocused();
+
+  await quickView.press("Enter");
+  const increase = dialog.getByRole("button", {
+    name: "Increase quantity of AeroBook Pro 14",
+  });
+  await increase.click();
+  await increase.click();
+  await dialog.locator("[data-add-to-cart-button]").click();
+
+  await expect(dialog).toBeHidden();
+  await expect(
+    page
+      .getByRole("status")
+      .filter({ hasText: "3 × AeroBook Pro 14 added to your cart." })
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Cart, 3 items" })).toBeVisible();
+
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/products");
+
+  const mobileCard = page
+    .getByRole("article")
+    .filter({ hasText: "AeroBook Pro 14" });
+  await expect(
+    mobileCard.locator('button[aria-label="Quick view AeroBook Pro 14"]')
+  ).toBeHidden();
+  await expect(
+    mobileCard.locator("[data-add-to-cart-button]")
+  ).toBeVisible();
+});
+
 test("keeps every product-card action compact and equal-sized", async ({
   page,
 }) => {
@@ -115,7 +195,7 @@ test("offers View cart and exact Undo after adding a product", async ({
   const card = page
     .getByRole("article")
     .filter({ hasText: "AeroBook Pro 14" });
-  const addButton = card.getByRole("button");
+  const addButton = card.locator("[data-add-to-cart-button]");
 
   await addButton.click();
   await addButton.click();

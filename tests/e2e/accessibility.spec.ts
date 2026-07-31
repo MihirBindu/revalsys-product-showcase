@@ -30,6 +30,31 @@ for (const route of publicRoutes) {
   });
 }
 
+test("desktop product quick view meets the automated WCAG baseline", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/products");
+  await page
+    .getByRole("button", { name: "Quick view AeroBook Pro 14" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "AeroBook Pro 14" })
+  ).toBeVisible();
+
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+
+  expect(
+    violations.map((violation) => ({
+      id: violation.id,
+      impact: violation.impact,
+      targets: violation.nodes.map((node) => node.target),
+    }))
+  ).toEqual([]);
+});
+
 test("public routes keep their SEO and heading contracts", async ({ page }) => {
   for (const route of publicRoutes) {
     await page.goto(route);

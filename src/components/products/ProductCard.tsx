@@ -4,6 +4,7 @@ import type { Product } from "@/types/product";
 import Badge from "@/components/ui/Badge";
 import PriceTag from "@/components/product/PriceTag";
 import AddToCartButton from "@/components/product/AddToCartButton";
+import ProductQuickView from "@/components/products/ProductQuickView";
 
 export default function ProductCard({
   eager = false,
@@ -14,31 +15,34 @@ export default function ProductCard({
 }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white hover:shadow-md motion-safe:transition-shadow">
-      {/* A convenience click target for pointer users. Hidden from assistive
-          tech and skipped in the tab order because the title link below points
-          at the same product — otherwise every card announces twice. */}
-      <Link
-        href={`/products/${product.slug}`}
-        className="block"
-        aria-hidden="true"
-        tabIndex={-1}
-      >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            loading={eager ? "eager" : "lazy"}
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
-          />
-          {!product.inStock && (
-            <span className="absolute left-2 top-2">
-              <Badge tone="danger">Out of stock</Badge>
-            </span>
-          )}
-        </div>
-      </Link>
+      <div className="relative">
+        {/* A convenience click target for pointer users. Hidden from assistive
+            tech and skipped in the tab order because the title link below points
+            at the same product — otherwise every card announces twice. */}
+        <Link
+          href={`/products/${product.slug}`}
+          className="block"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              loading={eager ? "eager" : "lazy"}
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+              className="object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
+            />
+            {!product.inStock && (
+              <span className="absolute left-2 top-2">
+                <Badge tone="danger">Out of stock</Badge>
+              </span>
+            )}
+          </div>
+        </Link>
+        <ProductQuickView product={product} />
+      </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">
           <Link href={`/products/${product.slug}`}>
