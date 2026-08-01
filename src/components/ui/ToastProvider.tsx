@@ -12,6 +12,7 @@ import Toast, { type ToastAction } from "@/components/ui/Toast";
 
 export interface ToastInput {
   actions?: ToastAction[];
+  countdownTo?: number;
   duration?: number;
   message: string;
 }
@@ -43,6 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <Toast
           key={notice.id}
           actions={notice.actions}
+          countdownTo = {notice.countdownTo}
           duration={notice.duration}
           message={notice.message}
           onDismiss={dismissToast}

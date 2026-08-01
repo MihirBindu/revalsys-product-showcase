@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";  
 import Link from "next/link";
 
 export interface ToastAction {
@@ -11,6 +11,8 @@ export interface ToastAction {
 
 export interface ToastProps {
   actions?: ToastAction[];
+  /** Epoch ms; when set, the toast renders a live countdown to this instant. */
+  countdownTo?: number;
   duration?: number;
   message: string;
   onDismiss: () => void;
@@ -18,6 +20,7 @@ export interface ToastProps {
 
 export default function Toast({
   actions = [],
+  countdownTo,
   duration = 4000,
   message,
   onDismiss,
@@ -26,6 +29,23 @@ export default function Toast({
     const timer = window.setTimeout(onDismiss, duration);
     return () => window.clearTimeout(timer);
   }, [duration, onDismiss]);
+
+  const [remaining, setRemaining] = useState(() =>
+    countdownTo === undefined
+      ? 0
+      : Math.max(0, Math.ceil((countdownTo - Date.now()) / 1000))
+  );
+  // Captured once so the progress bar has a denominator that can't shift.
+  const [totalSeconds] = useState(() => Math.max(1, remaining));   
+
+  useEffect(() => {
+    if (countdownTo === undefined) return;
+    // Sub-second polling so the displayed number never skips or lags a tick.
+    const id = window.setInterval(() => {
+      setRemaining(Math.max(0, Math.ceil((countdownTo - Date.now()) / 1000)));
+    }, 250);
+    return () => window.clearInterval(id);
+  }, [countdownTo]);
 
   return (
     <div
@@ -41,6 +61,22 @@ export default function Toast({
       </span>
       <div className="min-w-0 flex-1">
         <p className="font-medium">{message}</p>
+        {countdownTo !== undefined && (
+          // aria-hidden: the parent is role="status" + aria-atomic, so a
+          // ticking number would re-announce the whole toast every second.
+          // The message text carries the duration for screen readers.
+          <div aria-hidden className="mt-2">
+            <p className="text-xs font-semibold tabular-nums text-emerald-700">
+              Adding in {remaining}s
+            </p>
+            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-emerald-100">
+              <div
+                className="h-full rounded-full bg-emerald-600 transition-[width] duration-200 ease-linear"
+                style={{ width: `${(remaining / totalSeconds) * 100}%` }}   
+              />
+            </div>
+          </div>
+        )}
         {actions.length > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-2">
             {actions.map((action) =>
